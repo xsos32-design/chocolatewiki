@@ -540,7 +540,7 @@ ol.prules{margin:0;padding-left:20px;font-size:12.8px;line-height:1.95;color:var
  <input id="q" type="search" placeholder="搜編號、品名、品牌、類別…" autocomplete="off">
  <div class="filters">
   <span class="fbtn" data-f="promo">&#127991; 折扣中</span>
-  <span class="fbtn" data-f="info">&#128199; 商品資訊卡</span>
+  <span class="fbtn" data-f="info">&#128195; 商品資訊卡</span>
   <span class="fbtn" data-f="df">免稅限定</span>
   <span class="fbtn" data-f="award">有得獎紀錄</span>
   <span class="fbtn" data-f="noimg">&#128247; 缺實品圖</span>
@@ -1107,22 +1107,8 @@ buildExcl(); build(); apply();
   [].forEach.call(document.querySelectorAll('#list .card'),function(c){
    if(c.dataset.enh)return; c.dataset.enh='1';
    /* 話術框：複製此話術 */
-   [].forEach.call(c.querySelectorAll('.talkbox'),function(bx){
-    var head=bx.querySelector('.tbhead'); if(!head||head.querySelector('.tools'))return;
-    var t=document.createElement('span'); t.className='tools';
-    t.innerHTML='<button class="tbtn" data-act="talk" type="button">⧉ 複製話術</button>';
-    head.appendChild(t);
-   });
-   /* 卡片工具列 */
-   var body=c.querySelector('.body'); if(!body||body.querySelector('.cardtools'))return;
-   var bar=document.createElement('div'); bar.className='cardtools';
-   var ean=c.querySelector('.pill.ean');
-   var P2=window.P||[];
-   var bn=(function(){var t=c.querySelector('.spec'); return '';})();
-   bar.innerHTML='<button class="tbtn" data-act="brand" type="button">◈ 只看同品牌</button>'
-    +(ean?'<button class="tbtn" data-act="ean" type="button">⧉ 複製條碼</button>':'')
-    +'<button class="tbtn" data-act="top" type="button">↑ 回頂端</button>';
-   body.insertBefore(bar,body.firstChild);
+   /* 話術框工具鈕已移除 */
+   /* 卡片工具列已移除 */
   });
  }
  window.__enh=enhance;
