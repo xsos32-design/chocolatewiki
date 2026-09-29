@@ -894,7 +894,7 @@ document.addEventListener('click',function(e){
  if(b){var f=b.getAttribute('data-f');filters[f]=!filters[f];b.classList.toggle('on');apply();return;}
  var it=e.target.closest?e.target.closest('.navitem'):null;
  if(it){var el=document.getElementById(it.getAttribute('data-go'));
-  if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.body.classList.remove('open');}}
+  if(window.__goCard){window.__goCard(it.getAttribute('data-go'));}else if(el){el.scrollIntoView({behavior:'smooth',block:'start'});document.body.classList.remove('open');}}
  if(e.target.id==='mb')document.body.classList.toggle('open');
 });
 buildExcl(); build(); apply();
