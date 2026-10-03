@@ -1478,11 +1478,13 @@ buildExcl(); build(); apply();
 <div id="shview">
  <div class="shwrap">
   <h1>🏬 我的架上 · 學習模式</h1>
-  <p class="shdesc">勾選你這一櫃實際有貨的巧克力，這裡只練這些。要移除：按下方清單的 ✕，或回商品卡再按一次「✔ 在架上」。清單存在這支手機的瀏覽器裡，換手機請用下方的匯出碼帶走。</p>
+  <p class="shdesc fold" id="shdesc" title="點一下展開／收起">勾選你這一櫃實際有貨的巧克力，這裡只練這些。要移除：按下方清單的 ✕，或回商品卡再按一次「✔ 在架上」。清單存在這支手機的瀏覽器裡，換手機請用下方的匯出碼帶走。</p>
+  <button type="button" id="shdtog" class="shdtog">▾ 展開說明</button>
   <div id="shstat" class="shstat"></div>
   <div class="shbtns">
-   <button type="button" id="shonly" class="shbig">🔎 只看我勾的品項</button>
-   <button type="button" id="shquiz" class="shbig gold">🎯 開始抽考</button>
+   <button type="button" id="shdocbtn" class="shbig gold">📋 全部資料一次看</button>
+   <button type="button" id="shonly" class="shbig">🏬 只看我的架上</button>
+   <button type="button" id="shquiz" class="shbig">🎯 開始抽考</button>
   </div>
   <div id="shquizbox" class="shquiz" hidden>
    <div class="shq"><b id="shqname"></b><span id="shqask"></span></div>
@@ -1492,9 +1494,12 @@ buildExcl(); build(); apply();
     <button type="button" id="shok" class="shbig ok" hidden>✔ 我答對了</button>
     <button type="button" id="shng" class="shbig ng" hidden>✘ 我答錯了</button>
     <button type="button" id="shnext" class="shbig" hidden>➜ 下一題</button>
+    <button type="button" id="shskip" class="shsm">↷ 這題跳過</button>
+    <button type="button" id="shquit" class="shsm">■ 結束抽考</button>
    </div>
    <div id="shscore" class="shscore"></div>
   </div>
+  <div id="shlist" class="shlist"></div>
   <div class="shpre"><h3>⭐ 本月預設（目標＋獎勵）</h3><div id="shprebody"></div></div>
   <div class="shmgr">
    <h3>清單管理</h3>
@@ -1505,16 +1510,22 @@ buildExcl(); build(); apply();
    </div>
    <textarea id="shcode" class="shcode" hidden placeholder="清單碼"></textarea>
   </div>
-  <div id="shlist" class="shlist"></div>
  </div>
+ <div id="shdoc" hidden></div>
 </div>
 <style>
 body.shon #shview{display:block}
 body.shon #main,body.shon #kbview{display:none}
 #shview{display:none;padding:26px 16px 120px;max-width:900px;margin:0 auto}
 #shview h1{font-family:'Noto Serif TC',serif;font-size:24px;color:#E8CD8A;margin:0 0 6px}
-.shdesc{font-size:12.5px;line-height:1.8;color:var(--dim2);margin:0 0 14px}
+.shdesc{font-size:12.5px;line-height:1.8;color:var(--dim2);margin:0 0 14px;cursor:pointer}
+.shdesc.fold{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.shdesc{margin:0 0 4px!important}.shdtog{display:inline-block;margin:0 0 14px;padding:3px 10px;font-size:11.5px;border-radius:999px;border:1px solid rgba(201,164,92,.45);background:rgba(201,164,92,.10);color:var(--gold2);cursor:pointer;line-height:1.6}.shdtog:active{background:rgba(201,164,92,.22)}
+#shview .shbtns{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+#shview .shbtns .shbig{width:100%;text-align:center}
 .shstat{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.shstat b.hot{border-color:rgba(126,219,166,.55)!important;background:rgba(126,219,166,.10)!important;color:#9FE9C0!important}
+.shstat b.tot{border-color:rgba(201,164,92,.65)!important;background:rgba(201,164,92,.14)!important;color:#F2D9A8!important}
 .shstat span{font-size:11.5px;padding:4px 9px;border-radius:999px;
  border:1px solid rgba(201,164,92,.3);background:rgba(201,164,92,.08);color:#E6D9BE}
 .shstat span b{color:#E8CD8A}
@@ -1527,11 +1538,15 @@ body.shon #main,body.shon #kbview{display:none}
 .shsm{font-size:12px;padding:6px 11px;border-radius:8px;cursor:pointer;
  border:1px solid rgba(201,164,92,.3);background:rgba(255,255,255,.04);color:var(--dim2)}
 .shsm.danger{border-color:rgba(255,140,140,.35);color:#FFC4C4}
+body.quizon #shview .shdesc,body.quizon #shview .shstat,body.quizon #shview .shpre,
+body.quizon #shview .shmgr,body.quizon #shview #shlist,body.quizon #shview .shbtns{display:none!important}
+body.quizon #shview h1{font-size:19px}
 .shquiz{margin:12px 0;padding:14px;border:1px solid rgba(201,164,92,.3);border-radius:12px;
  background:rgba(201,164,92,.06)}
 .shq b{display:block;font-family:'Noto Serif TC',serif;font-size:17px;color:#E8CD8A;margin-bottom:6px;line-height:1.5}
-.shq span{font-size:13.5px;color:var(--fg,#dfe7f2)}
-.sha{margin:10px 0 0;padding:11px 12px;border-radius:9px;background:rgba(255,255,255,.05);
+.shq span{display:inline-block;font-size:13.5px;color:var(--fg,#dfe7f2);line-height:1.7}
+.shq span.qd{color:#BFDCFF}.shq span.qf{color:#9FE9C0}
+.sha{white-space:pre-wrap;margin:10px 0 0;padding:11px 12px;border-radius:9px;background:rgba(255,255,255,.05);
  border:1px solid rgba(255,255,255,.10);font-size:13.5px;line-height:1.85;color:#EFE6D2}
 .shqbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
 .shscore{margin-top:9px;font-size:12px;color:var(--dim2)}
@@ -1552,8 +1567,62 @@ body.shon #main,body.shon #kbview{display:none}
 .shb.on{border-color:rgba(126,219,166,.65);background:rgba(126,219,166,.15);color:#9FE9C0}
 .eyebrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .shf{border-color:rgba(126,219,166,.45)!important}
+/* ===== 我的架上：全部資料一次看 ===== */
+#shview.docon .shwrap{display:none}
+#shdoc{padding:0 0 120px}
+#shdoc .dbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+ padding:12px 0 12px;margin-bottom:10px;background:linear-gradient(180deg,rgba(21,14,9,.99) 70%,rgba(21,14,9,0));
+ border-bottom:1px solid rgba(201,164,92,.22)}
+#shdoc .dbar .dcount{font-size:12.5px;color:var(--gold2);margin-right:auto;white-space:nowrap}
+#shdoc .dbar .dcount b{font-family:'Cormorant Garamond',serif;font-size:19px}
+#shdoc .dbtn{font-size:12.5px;padding:7px 12px;white-space:nowrap;border-radius:9px;cursor:pointer;
+ border:1px solid rgba(201,164,92,.45);background:rgba(201,164,92,.10);color:var(--gold2)}
+#shdoc .dbtn:hover{background:rgba(201,164,92,.22)}
+#shdoc .dbtn.on{background:linear-gradient(180deg,rgba(201,164,92,.40),rgba(201,164,92,.22));color:#FBF1DC}
+#shdoc .dempty{padding:40px 10px;text-align:center;color:var(--dim2);font-size:14px;line-height:2}
+#shdoc .dgrp{font-family:'Noto Serif TC',serif;font-size:15px;color:#E8CD8A;margin:22px 0 8px;
+ padding-bottom:6px;border-bottom:1px solid rgba(201,164,92,.25)}
+#shdoc .di{border:1px solid rgba(201,164,92,.22);border-radius:12px;padding:13px 15px;margin-bottom:11px;
+ background:rgba(30,20,12,.55);break-inside:avoid}
+#shdoc .dh{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:6px}
+#shdoc .dno{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--dim2);
+ border:1px solid rgba(201,164,92,.3);border-radius:6px;padding:1px 7px}
+#shdoc .dyr{font-family:'Cormorant Garamond',serif;font-size:13px;color:#E8CD8A;border:1px solid rgba(201,164,92,.5);background:rgba(201,164,92,.12);border-radius:6px;padding:1px 8px}
+#shdoc .dyr.vin{color:#BFDCFF;border-color:rgba(126,180,255,.5);background:rgba(126,180,255,.10)}
+#shdoc .dzh{font-family:'Noto Serif TC',serif;font-size:17px;color:#F2E4C8;line-height:1.4}
+#shdoc .den{font-size:11.5px;color:var(--dim2);width:100%}
+#shdoc .dpill{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0}
+#shdoc .dpill span{font-size:11.5px;padding:3px 9px;border-radius:999px;
+ border:1px solid rgba(201,164,92,.35);color:var(--gold2)}
+#shdoc .dpill span.hot{border-color:rgba(255,120,120,.6);background:rgba(255,90,90,.14);color:#FFC9C9;font-weight:700}
+#shdoc .dpill span.warn{border-color:rgba(255,140,140,.55);background:rgba(255,90,90,.10);color:#FFC4C4}
+#shdoc .dpill span.tg{border-color:rgba(255,196,80,.5);background:rgba(255,196,80,.12);color:#FFE2A0}
+#shdoc .dpill span.rw{border-color:rgba(126,219,166,.5);background:rgba(126,219,166,.10);color:#9FE9C0}
+#shdoc .dpos{font-family:'Noto Serif TC',serif;font-size:14px;color:#E8CD8A;line-height:1.75;margin:6px 0}
+#shdoc .dl{display:grid;grid-template-columns:62px 1fr;gap:8px;font-size:12.5px;line-height:1.85;margin-top:4px}
+#shdoc .dl>span{color:var(--dim2);letter-spacing:1px}
+#shdoc .dl>div{color:#E2D6C2;min-width:0}
+#shdoc .dtalk{margin-top:8px;padding:9px 11px;border-left:3px solid rgba(201,164,92,.6);
+ background:rgba(201,164,92,.07);border-radius:0 8px 8px 0;font-size:12.5px;line-height:1.9;color:#EADDCB}
+#shdoc .dsc{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+#shdoc .dsc i{font-style:normal;font-size:11.5px;color:var(--gold2);border:1px solid rgba(201,164,92,.25);
+ border-radius:6px;padding:2px 6px}
+#shdoc .dsc i.z{opacity:.35}
+#shdoc .more{display:none}
+#shdoc.full .more{display:block}
+#shdoc.full .dsc.more{display:flex}
+@media print{
+ body.shon #fdock,body.shon #ftop,body.shon #fback,body.shon #pnwrap,body.shon #xwbar,
+ body.shon #shdoc .dbar{display:none!important}
+ #shdoc .di{border-color:#999;background:#fff;color:#111;break-inside:avoid}
+ #shdoc .dzh,#shdoc .dpos,#shdoc .dgrp{color:#111}
+ #shdoc .dl>div,#shdoc .dtalk{color:#222;background:none}
+}
+
 </style>
-<script>
+<script>if(typeof window.rich!=='function'){window.rich=function(t){return esc(t).replace(/&lt;(\/?(?:b|u|i|em|strong|small))&gt;/g,'<$1>').replace(/&lt;br\s*\/?&gt;/g,'<br>');};}
+if(typeof window.plain!=='function'){window.plain=function(t){return String(t==null?'':t).replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'');};}
+
 (function(){
  var KEY='xw_shelf_choc_v1';
  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){return {};}}
@@ -1600,6 +1669,7 @@ body.shon #main,body.shon #kbview{display:none}
 
  /* --- 面板 --- */
  var V=document.getElementById('shview');
+ (function(){var d=document.getElementById('shdesc'),t=document.getElementById('shdtog');if(!d||!t)return;function up(){var f=d.classList.contains('fold');t.textContent=f?'▾ 展開說明':'▴ 收起說明';}t.addEventListener('click',function(){d.classList.toggle('fold');up();});d.addEventListener('click',function(){d.classList.toggle('fold');up();});up();})();
  function shFit(){
   var m=document.getElementById('menu');
   if(!m||!V)return;
@@ -1612,16 +1682,17 @@ body.shon #main,body.shon #kbview{display:none}
  function stat(){
   var a=ids(), byCat={}, no95=0, promo=0;
   a.forEach(function(k){var p=byId[k];byCat[p.cat]=(byCat[p.cat]||0)+1;
-   if(p.promo&&p.promo.length)promo++;});
-  var h='<span>總計 <b>'+a.length+'</b> 項</span>';
+   if(p.no95&&p.no95.length)no95++; if(p.promo&&p.promo.length)promo++;});
+  var h='<span>總計 <b class="tot">'+a.length+'</b> 項</span>';
   Object.keys(byCat).forEach(function(c){h+='<span>'+esc2(c)+' <b>'+byCat[c]+'</b></span>';});
-  if(promo)h+='<span>本檔有折扣 <b>'+promo+'</b></span>';
+  if(promo)h+='<span>本檔有折扣 <b class="hot">'+promo+'</b></span>';
+  if(no95)h+='<span style="border-color:rgba(255,140,140,.4);color:#FFC4C4">不可 95 折 <b>'+no95+'</b></span>';
   document.getElementById('shstat').innerHTML=h;
   var lw=document.getElementById('shlist');
-  if(!a.length){lw.innerHTML='<div class="shempty">還沒有勾選任何品項。<br>回到商品列表，在每張卡片右上角按「＋ 在架上」。</div>';return;}
+  if(!a.length){lw.innerHTML='<div class="shempty">還沒有勾選任何品項。<br>回到商品列表，在每張巧克力卡片右上角按「＋ 在架上」。</div>';return;}
   lw.innerHTML=a.map(function(k){var p=byId[k];
    return '<div class="shi" data-go="'+k+'"><button type="button" class="shx" data-x="'+k+'" title="從架上移除">\u2715</button><b>'+esc2(p.nameZh)+'</b><em>'+p.no+
-    (p.price?'　'+esc2(p.price):'')+'</em></div>';}).join('');
+    (p.spec?'　'+esc2(p.spec):'')+(p.price?'　'+esc2(p.price):'')+'</em></div>';}).join('');
  }
  function preHTML(){
   if(!PRE)return '';
@@ -1661,35 +1732,62 @@ body.shon #main,body.shon #kbview{display:none}
  window.shelfRender=render;
 
  /* --- 抽考 --- */
-  var cur=null, right=0, total=0;
+ var cur=null, right=0, total=0;
  function pickQ(){
   var a=ids(); if(!a.length)return null;
   var p=byId[a[Math.floor(Math.random()*a.length)]];
   var qs=[];
-  if(p.code)qs.push(['條碼（EAN）是幾號？',String(p.code)]);
-  if(p.brand)qs.push(['這是哪個品牌？',p.brand+(p.group?'（'+p.group+'）':'')]);
-  if(p.cat)qs.push(['歸在哪一大類？',p.cat]);
-  if(p.spec)qs.push(['規格是？',String(p.spec)]);
-  if(p.price)qs.push(['售價多少？',String(p.price)]);
-  if(p.pos)qs.push(['一句話怎麼賣？',p.pos]);
-  if(p.promo&&p.promo.length)qs.push(['這支這一檔有什麼折扣？',p.promo.map(function(x){return x.t+(x.sub?'（'+x.sub+'）':'');}).join('／')]);
-  if(p.info&&p.info.B)qs.push(['最強的一句賣點（B）是什麼？',p.info.B]);
-  if(p.info&&p.info.A&&p.info.A.length)qs.push(['三個優勢（A）是什麼？',p.info.A.join('／')]);
-  if(p.info&&p.info.talk)qs.push(['商訓話術怎麼講？',p.info.talk]);
-  if(p.awards&&p.awards.length)qs.push(['得過什麼獎？',p.awards.join('／')]);
-  if(p.tg)qs.push(['這支是不是本月出清目標？','\u{1F3AF} 是 —— '+p.tg]);
-  if(p.rw)qs.push(['賣這支有 Push Money 嗎？','\u{1F4B0} '+p.rw]);
+  var QD=[], QF=[];
+  var BAD=/⚠|待確認|待查證|官方查無|查無|不一致|以瓶身為準|以現場|請確認|疑似|未標示|未公開|未列/;
+  function ok(v){ var t=String(v==null?'':v).trim(); return t!=='' && !BAD.test(t); }
+  function D(q,ans){ if(ok(ans)) QD.push(['\u{1F4CB} 商品資料｜'+q,plain(ans)]); }
+  function F(q,ans){ if(ok(ans)) QF.push(['\u{1F5E3} FAB 話術｜'+q,plain(ans)]); }
+
+  /* ---------- 商品資料 ---------- */
+  if(p.brand) D('品牌是哪一家？產地呢？',p.brand+(p.group?'　·　'+p.group:''));
+  if(p.cat) D('歸在哪一大類？',p.cat);
+  if(p.spec) D('規格是？',String(p.spec));
+  if(p.price&&!/待確認|未標價/.test(p.price)) D('售價多少？',String(p.price));
+  if(p.code) D('品號是幾號？',String(p.code));
+  if(p.promo&&p.promo.length) D('這一檔有什麼折扣／滿額贈？',p.promo.map(function(x){return x.t+(x.sub?'（'+x.sub+'）':'');}).join('／'));
+  if(p.awards&&p.awards.length) D('得過什麼獎？',p.awards.join('／'));
+  if(p.dfText) D('有什麼免稅／通路標記？',p.dfText);
+  if(p.tg) D('這支是不是本月出清目標？','\u{1F3AF} 是 —— '+p.tg);
+  if(p.rw) D('賣這支有 Push Money 嗎？','\u{1F4B0} '+p.rw);
+  if(p.notes&&p.notes.length){
+   var n=p.notes[Math.floor(Math.random()*p.notes.length)];
+   if(n&&n.v) D((n.k||'補充')+'是？',n.v);
+  }
+  if(p.points&&p.points.length) D('三個重點講得出來嗎？','・'+p.points.join('\n・'));
+
+  /* ---------- FAB ---------- */
+  [p.fab,p.info].forEach(function(fb){
+   if(!fb) return;
+   var tag=fb.src?'（'+fb.src+'）':'';
+   F('F 特點是什麼？'+tag,fb.F);
+   if(fb.A&&fb.A.length) F('A 優勢講得出幾點？'+tag,'・'+fb.A.join('\n・'));
+   F('B 好處是什麼？'+tag,fb.B);
+   F('完整話術怎麼講？'+tag,fb.talk);
+  });
+  if(p.pos) F('一句話怎麼賣？',p.pos);
+
+  /* FAB 與商品資料各半，兩邊都有的話一半一半出題 */
+  if(QD.length&&QF.length) qs = (Math.random()<0.5) ? QF : QD;
+  else qs = QD.length ? QD : QF;
   if(!qs.length)return null;
   var q=qs[Math.floor(Math.random()*qs.length)];
   return {p:p,q:q[0],a:q[1]};
  }
+
  function newQ(){
   cur=pickQ();
   var box=document.getElementById('shquizbox');
   if(!cur){box.hidden=true;return;}
   box.hidden=false;
   document.getElementById('shqname').textContent=cur.p.nameZh;
-  document.getElementById('shqask').textContent=cur.q;
+  var _ask=document.getElementById('shqask');
+  _ask.textContent=cur.q;
+  _ask.className=/FAB/.test(cur.q)?'qf':'qd';
   var A=document.getElementById('shqans'); A.hidden=true; A.textContent=cur.a;
   document.getElementById('shshow').hidden=false;
   document.getElementById('shok').hidden=true;
@@ -1698,7 +1796,13 @@ body.shon #main,body.shon #kbview{display:none}
  }
  function score(){document.getElementById('shscore').textContent=
    total?('本次 '+right+' / '+total+'　正確率 '+Math.round(right/total*100)+'%'):'';}
- document.getElementById('shquiz').addEventListener('click',function(){right=0;total=0;score();newQ();});
+ document.getElementById('shquiz').addEventListener('click',function(){
+   right=0;total=0;score();newQ();document.body.classList.add('quizon');
+   window.scrollTo({top:0,behavior:'smooth'});});
+ document.getElementById('shskip').addEventListener('click',newQ);
+ document.getElementById('shquit').addEventListener('click',function(){
+   document.body.classList.remove('quizon');
+   document.getElementById('shquizbox').hidden=true;});
  document.getElementById('shshow').addEventListener('click',function(){
   document.getElementById('shqans').hidden=false; this.hidden=true;
   document.getElementById('shok').hidden=false; document.getElementById('shng').hidden=false;});
@@ -1756,6 +1860,118 @@ body.shon #main,body.shon #kbview{display:none}
  function openIfHash(){ if(location.hash==='#shelf'){ var d=document.getElementById('dsh');
   if(d&&!document.body.classList.contains('shon')){ d.click(); } } }
  window.addEventListener('hashchange',openIfHash); setTimeout(openIfHash,300);
+})();
+</script>
+<script>
+/* ===== 我的架上 · 全部資料一次看 ===== */
+(function(){
+ var box=document.getElementById('shdoc'), btn=document.getElementById('shdocbtn');
+ if(!box||!btn||typeof P==='undefined') return;
+ var view=document.getElementById('shview');
+ var ICO=['\u{1F36F}','\u{1F351}','\u{1F34B}','\u{1F330}','\u{1F525}','\u{1F336}','\u{1FAD7}','\u{1F943}'];
+ var LBL=['甜潤','果香','清爽','木質苦','煙燻','辛香','酒體','酒感'];
+ var MAP={}; try{P.forEach(function(p){MAP[p.id]=p;});}catch(e){}
+ /* --- 年份解析：先抓「年數」，沒有再抓「年份（西元）」 --- */
+ var RE_AGE=/(?:^|[^\d])(\d{1,3})\s*(?:年(?!份)|Years?\s*Old|Years?\b|YO\b|Y\b)/i;
+ var RE_VIN=/(?:^|[^\d])(19\d{2}|20[0-2]\d)(?:[^\d]|$)/;
+ var YR={};
+ function yr(p){
+  if(YR[p.id]) return YR[p.id];
+  var s=(p.nameZh||'')+' '+(p.nameEn||'');
+  var m=RE_AGE.exec(s), r;
+  if(m) r={r:0,v:parseInt(m[1],10),t:m[1]+' 年'};
+  else { var v=RE_VIN.exec(s); r = v ? {r:1,v:parseInt(v[1],10),t:v[1]+' 年份'} : {r:2,v:0,t:''}; }
+  return (YR[p.id]=r);
+ }
+ function E(t){return String(t==null?'':t).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+ function ids(){return Object.keys(window.SHELF||{}).filter(function(k){return window.SHELF[k]&&MAP[k];});}
+ function L(k,v,cls){return v?'<div class="dl'+(cls?' '+cls:'')+'"><span>'+E(k)+'</span><div>'+E(v)+'</div></div>':'';}
+function LR(k,v,cls){return v?'<div class="dl'+(cls?' '+cls:'')+'"><span>'+E(k)+'</span><div>'+rich(v)+'</div></div>':'';}
+
+ function talkOf(p){
+  var t=(p.fab&&p.fab.talk)||(p.fab2&&p.fab2.talk)||(p.manual&&p.manual.talk)||'';
+  return t;
+ }
+ function item(p){
+  var h='';
+  h+='<div class="di"><div class="dh"><span class="dno">'+E(p.no||'')+'</span>'
+   + '<span class="dzh">'+E(p.nameZh||'')+'</span>'
+   + (p.nameEn&&p.nameEn!==p.nameZh?'<span class="den">'+E(p.nameEn)+'</span>':'')+'</div>';
+  /* 價格與標記 */
+  var pl=[];
+  if(p.sale&&p.pv&&p.sale<p.pv){ pl.push('<span class="hot">單一促銷價 NT$'+Number(p.sale).toLocaleString()+'</span>'); pl.push('<span>原價 NT$'+Number(p.pv).toLocaleString()+'</span>'); }
+  else if(p.price) pl.push('<span>'+E(p.price)+'</span>');
+  if(p.code) pl.push('<span>品號 '+E(p.code)+'</span>');
+  if(p.dfText) pl.push('<span>'+E(p.dfText)+'</span>');
+  if(p.tg) pl.push('<span class="tg">\u{1F3AF} 出清目標</span>');
+  if(p.rw) pl.push('<span class="rw">\u{1F4B0} Push Money</span>');
+  if(pl.length) h+='<div class="dpill">'+pl.join('')+'</div>';
+  if(p.pos) h+='<div class="dpos">'+E(p.pos)+'</div>';
+  h+=L('規格',[p.spec,p.cat].filter(Boolean).join('　·　'));
+  h+=L('品牌',[p.brand,p.group].filter(Boolean).join('　·　'));
+  if(p.promo&&p.promo.length) h+=L('促銷',p.promo.map(function(x){return x.t+(x.sub?'（'+x.sub+'）':'');}).join('；'));
+  if(p.tg) h+=L('目標',p.tg);
+  if(p.rw) h+=L('獎勵',p.rw);
+  var fb=p.fab||p.info||null;
+  if(fb&&fb.B) h+=L('B 好處',fb.B);
+  var tk=(p.fab&&p.fab.talk)||(p.info&&p.info.talk)||'';
+  if(tk) h+='<div class="dtalk">'+E(tk)+'</div>';
+  /* 完整模式才顯示 */
+  if(fb&&fb.F) h+='<div class="more">'+LR('F 特點',fb.F)+'</div>';
+  if(fb&&fb.A&&fb.A.length) h+='<div class="more">'+LR('A 優勢','・'+fb.A.join('　・'))+'</div>';
+  if(p.notes&&p.notes.length)
+   h+='<div class="more">'+p.notes.map(function(n){return LR(n.k||'補充',n.v);}).join('')+'</div>';
+  if(p.points&&p.points.length) h+='<div class="more">'+LR('重點','・'+p.points.join('　・'))+'</div>';
+  if(p.awards&&p.awards.length) h+='<div class="more">'+L('得獎',p.awards.join('／'))+'</div>';
+  h+='</div>';
+  return h;
+ }
+
+ function build(){
+  var L2=ids().map(function(k){return MAP[k];});
+  L2.sort(function(a,b){
+   var c=String(a.cat||'').localeCompare(String(b.cat||''),'zh-Hant');
+   if(c)return c;
+   return String(a.no||'').localeCompare(String(b.no||''),'en',{numeric:true});
+  });
+  var head='<div class="dbar">'
+   +'<button type="button" class="dbtn on" id="dback" title="返回我的架上">←</button>'
+   +'<span class="dcount">共 <b>'+L2.length+'</b> 項</span>'
+   +'<button type="button" class="dbtn" id="dfull">顯示完整</button>'
+   +'<button type="button" class="dbtn" id="dprint">\u{1F5A8} 列印</button>'
+   +'</div>';
+  if(!L2.length){
+   box.innerHTML=head+'<div class="dempty">架上還沒有品項。<br>回商品卡按「＋ 在架上」勾選你這一櫃有貨的巧克力，再回來這裡一次看完。</div>';
+  } else {
+   var out='', cur='';
+   L2.forEach(function(p){
+    if(p.cat!==cur){cur=p.cat||'';out+='<div class="dgrp">'+E(cur)+'</div>';}
+    out+=item(p);
+   });
+   box.innerHTML=head+out;
+  }
+  document.getElementById('dback').addEventListener('click',close);
+  document.getElementById('dprint').addEventListener('click',function(){window.print();});
+  var fb=document.getElementById('dfull');
+  fb.classList.toggle('on',box.classList.contains('full'));
+  fb.textContent=box.classList.contains('full')?'顯示精簡':'顯示完整';
+  fb.addEventListener('click',function(){
+   var f=box.classList.toggle('full');
+   fb.classList.toggle('on',f);
+   fb.textContent=f?'顯示精簡':'顯示完整';
+  });
+ }
+ function open(){ build(); box.hidden=false; view.classList.add('docon');
+  window.scrollTo({top:0,behavior:'auto'}); }
+ function close(){ box.hidden=true; view.classList.remove('docon');
+  window.scrollTo({top:0,behavior:'auto'}); }
+ btn.addEventListener('click',open);
+ /* 關閉我的架上面板時一併收起 */
+ var dsh=document.getElementById('dsh');
+ if(dsh) dsh.addEventListener('click',function(){ if(!document.body.classList.contains('shon')) close(); });
+ document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!box.hidden) close(); });
+ window.xwShelfDocClose=close;
 })();
 </script>
 <style>
