@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"><meta name="theme-color" content="#060D18"><!--brand-og--><meta name="description" content="十大分類、200 項巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:type" content="website"><meta property="og:url" content="https://xsos32-design.github.io/chocolatewiki/"><meta property="og:title" content="昇恆昌巧克力速讀檔案"><meta property="og:description" content="十大分類、200 項巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><link rel="preload" as="image" href="img/brand/hero.webp" fetchpriority="high"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><!--/brand-og-->
+<meta charset="utf-8"><meta name="theme-color" content="#060D18"><!--brand-og--><meta name="description" content="十大分類巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:type" content="website"><meta property="og:url" content="https://xsos32-design.github.io/chocolatewiki/"><meta property="og:title" content="昇恆昌巧克力速讀檔案"><meta property="og:description" content="十大分類巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><link rel="preload" as="image" href="img/brand/hero.webp" fetchpriority="high"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><!--/brand-og-->
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <title>昇恆昌巧克力速讀檔案</title>
@@ -2383,5 +2383,41 @@ details.catacc[data-c="軟糖・糖果"]>summary::before{background-image:url(im
 details.catacc[data-c="兒童・玩具組"]>summary::before{background-image:url(img/brand/cat/toy.webp)}
 details.catacc[data-c="堅果・鹹點"]>summary::before{background-image:url(img/brand/cat/nuts.webp)}
 details.catacc[data-c="沖泡飲品"]>summary::before{background-image:url(img/brand/cat/drink.webp)}
-</style></body>
+</style><style id="ux-css">
+@media (max-width:900px){
+ .navitem .n,.navitem .tagfab,.navitem .tagdf,.navitem .tagcard,details.catacc .grprow,.scr em,.scr .sce,.scr .scv,
+ .spec .k,.note .k,.tastebar .ts,.fabrow .t,.dchip .n,.eyebrow .cat,.eyebrow .shb,.kprow .kpk,summary.catrow i,.exi span,
+ .scsum i,.pricebar .pill,.prombar .pm,.tbtabs .tbtab,.tbpane .tbsrc,.shot .lbl,.fq b,.fa b{font-size:12px!important}
+}
+.exp-banner{position:relative;z-index:40;margin:0;padding:10px 16px;background:#7A1E2C;color:#FFE9EC;font:600 14px/1.5 'Noto Sans TC',sans-serif;text-align:center;border-bottom:2px solid #E8CD8A}
+.exp-soon{color:#C2334A!important;font-weight:700}
+.exp-left{display:inline-block;margin-left:6px;padding:0 7px;border-radius:999px;background:#C2334A;color:#fff;font-size:11.5px;font-weight:700;line-height:1.7;vertical-align:1px}
+body.promo-over .prombar{opacity:.5}
+body.promo-over .prombar::before{content:"10 月活動已結束 ・ ";font-size:12px;color:#E88A9A;font-weight:700}
+</style><script id="ux-js">(function(){
+ var END='2026-10-31',M='10 月';
+ function D(s){var p=String(s).split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+ function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());}
+ function run(){
+  var t=today();
+  if(t>D(END)){
+   document.body.classList.add('promo-over');
+   if(!document.querySelector('.exp-banner')){var b=document.createElement('div');b.className='exp-banner';
+    b.textContent='這是 '+M+'檔期的活動資料，已於 '+END.slice(5).replace('-','/')+' 結束。新檔期請以現場公告與 POS 為準。';
+    document.body.insertBefore(b,document.body.firstChild);}
+  }
+  var DAY=864e5;
+  document.querySelectorAll('[data-e]').forEach(function(el){
+   if(!el.isConnected||el.querySelector('.exp-left'))return;
+   var tx=(el.textContent||'').trim();if(tx.length>40||!/\d{1,2}\/\d{1,2}/.test(tx))return;
+   var left=Math.round((D(el.getAttribute('data-e'))-t)/DAY);
+   if(left<0||left>3)return;
+   if(el.getAttribute('data-s')&&t<D(el.getAttribute('data-s')))return;
+   el.classList.add('exp-soon');
+   var s=document.createElement('span');s.className='exp-left';s.textContent=left===0?'今天最後一天':'剩 '+left+' 天';el.appendChild(s);
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(run,60)});else setTimeout(run,60);
+ window.addEventListener('load',function(){setTimeout(run,300)});
+})();if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script></body>
 </html>
