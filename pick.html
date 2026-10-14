@@ -63,6 +63,7 @@ footer{padding:20px 16px 40px;text-align:center;color:var(--dim2);font-size:12px
 var P=JSON.parse(document.getElementById('PICK').textContent),R=P.rows,RT=P.rates;
 var END=new Date(2026,10,1);var NOW=new Date();try{var m=/[?&]now=(\d{4})-(\d{2})-(\d{2})/.exec(location.search);if(m)NOW=new Date(+m[1],+m[2]-1,+m[3],12);}catch(e){}
 var ENDED=NOW>=END;
+if(ENDED)R.forEach(function(r){if(r.q)r.q=r.q.replace(/^10 月促銷表新進品項：[^。]*。?.*$/,'10 月促銷表新進品項。品名依促銷表原文，詳細規格以包裝為準。').replace(/本月促銷表/g,'10 月促銷表').replace(/，湊三件 8 折時可整組帶走/g,'，可整組帶走');});
 var BUD=[['不限',0,1e12],['500 以下',0,500],['500–1,000',500,1000],['1,000–2,000',1000,2000],['2,000–4,000',2000,4000],['4,000 以上',4000,1e12]];
 var st={who:-1,bud:0,cat:-1,tas:[],sort:'fit',show:24};
 try{var sv=JSON.parse(localStorage.getItem('cpick-st')||'null');if(sv){for(var k in st)if(sv[k]!=null)st[k]=sv[k];st.show=24;}}catch(e){}
