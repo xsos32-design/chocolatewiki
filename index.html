@@ -785,20 +785,25 @@ function rowsNow(){
  else if(fs==='name') rows=rows.slice().sort(function(a,b){return a.nameZh.localeCompare(b.nameZh,'zh-Hant');});
  return rows;
 }
-/* 依品牌把「品牌檔案卡 + 該品牌商品卡」串成一串 */
+/* r20：比照酒類，商品卡依類別排列（類別內依品牌），品牌檔案集中放在最後 */
 var SEQ=[];
 (function(){
- BRANDS.forEach(function(b){
-  SEQ.push({b:b});
-  P.forEach(function(p){if(p.brand===b.name)SEQ.push({p:p});});
- });
+ var ci={};CATS.forEach(function(c,i){ci[c]=i;});
+ var bi={};BRANDS.forEach(function(b,i){bi[b.name]=i;});
+ P.map(function(p,i){return [p,i];}).sort(function(a,b){
+  var x=a[0],y=b[0];
+  return ((ci[x.cat]==null?99:ci[x.cat])-(ci[y.cat]==null?99:ci[y.cat]))||((bi[x.brand]==null?999:bi[x.brand])-(bi[y.brand]==null?999:bi[y.brand]))||(a[1]-b[1]);
+ }).forEach(function(r){SEQ.push({p:r[0]});});
+ SEQ.push({h:1});
+ BRANDS.forEach(function(b){SEQ.push({b:b});});
 })();
+function seqId(s){return s.h?'brandhead':(s.b?s.b.id:s.p.id);}
 function build(){
  var list=document.getElementById('list'), h='';
- SEQ.forEach(function(s){h+= s.b?bcard(s.b):card(s.p);});
+ SEQ.forEach(function(s){h+= s.h?'<section class="bhead" id="brandhead"><h2>品牌檔案<small>'+BRANDS.length+' 個品牌</small></h2><p>品牌故事、年表、官方賣點與櫃檯話術。商品卡裡的「品牌故事」可直接跳到這裡。</p></section>':(s.b?bcard(s.b):card(s.p));});
  h+='<div id="emptymsg" style="padding:80px 0;text-align:center;color:var(--dim2);display:none">找不到符合的品項</div>';
  list.innerHTML=h;
- SEQ.forEach(function(s){var id=s.b?s.b.id:s.p.id;CARDEL[id]=document.getElementById(id);});
+ SEQ.forEach(function(s){var id=seqId(s);CARDEL[id]=document.getElementById(id);});
  if(window.__enh)window.__enh();
 }
 function applyVis(rows){
@@ -808,10 +813,12 @@ function applyVis(rows){
  VIS=v;
  for(var id in CARDEL){
   var el=CARDEL[id]; if(!el)continue;
+  if(id==='brandhead'){continue;}
   el.style.display = (id.charAt(0)==='b'&&el.classList.contains('bcard'))
     ? ((!fs&&bv[id])?'':'none')
     : (v[id]?'':'none');
  }
+ if(CARDEL.brandhead){var anyb=false;for(var k in bv){if(!fs&&bv[k]){anyb=true;break;}}CARDEL.brandhead.style.display=anyb?'':'none';}
  var em=document.getElementById('emptymsg');
  if(em) em.style.display = rows.length?'none':'';
 }
@@ -820,9 +827,9 @@ function reorder(rows,fs){
  LASTSORT=fs;
  var list=document.getElementById('list');
  var frag=document.createDocumentFragment();
- var order = fs? rows.map(function(p){return p.id;}) : SEQ.map(function(s){return s.b?s.b.id:s.p.id;});
+ var order = fs? rows.map(function(p){return p.id;}) : SEQ.map(seqId);
  order.forEach(function(id){var el=CARDEL[id]; if(el) frag.appendChild(el);});
- if(!fs){ } else { SEQ.forEach(function(s){ if(s.b&&CARDEL[s.b.id]) frag.appendChild(CARDEL[s.b.id]); }); }
+ if(!fs){ } else { if(CARDEL.brandhead)frag.appendChild(CARDEL.brandhead); SEQ.forEach(function(s){ if(s.b&&CARDEL[s.b.id]) frag.appendChild(CARDEL[s.b.id]); }); }
  list.insertBefore(frag,document.getElementById('emptymsg'));
 }
 function apply(){
@@ -1123,7 +1130,7 @@ buildExcl(); build(); apply();
   fb.innerHTML='<span class="cnt2" id="fbcnt">0 / 0</span>'
    +'<button id="fbPrev" type="button" title="上一個（Shift+Enter）">‹ 上一個</button>'
    +'<button id="fbNext" type="button" title="下一個（Enter）">下一個 ›</button>'
-   +'<button id="fbCard" type="button" title="跳到下一個符合的品項">⇥ 跳下一支酒</button>';
+   +'<button id="fbCard" type="button" title="跳到下一個符合的品項">⇥ 跳下一項</button>';
   stick.appendChild(fb);
  }
  document.addEventListener('keydown',function(e){
@@ -2893,6 +2900,123 @@ function home(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',home);else home();
 setTimeout(home,800);
+})();
+</script><style id="r20-c">/* r20 巧克力檔案比照酒類：首頁區塊、類別磚、品牌檔案區、折疊段落、底部工具列三等分 */
+#r20home{max-width:1060px;margin:0 auto 18px;display:flex;flex-direction:column;gap:18px;color:#DCE2EA}
+#r20home .hero{position:relative;overflow:hidden;border-radius:0 0 24px 24px;background:#08101B url(img/brand/hero.webp) right -330px top 0/auto 100% no-repeat;padding:26px 20px 20px;min-height:250px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px}
+#r20home .hero::before{content:'';position:absolute;inset:0;background:#08101B;opacity:.35;pointer-events:none}
+#r20home .hero>*{position:relative}
+#r20home h1{margin:0;font-size:32px;line-height:1.25;color:#F3EAD7;letter-spacing:2px}
+#r20home .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:auto;padding-top:18px}
+#r20home .stats div{border-radius:14px;background:rgba(10,17,28,.82);border:1px solid rgba(201,164,92,.4);padding:10px 12px}
+#r20home .stats b{display:block;font-size:22px;color:#F3EAD7;font-variant-numeric:tabular-nums}
+#r20home .stats span{font-size:11px;color:#B7C0CC}
+#r20home .row{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+#r20home .srch{height:50px;border-radius:16px;background:#111A28;border:1px solid rgba(201,164,92,.35);color:#A7B1C0;display:flex;align-items:center;gap:10px;padding:0 14px;font-size:15px;text-align:left;cursor:pointer;width:100%}
+#r20home .srch svg{width:18px;height:18px;flex:none;color:#C9A45C}
+#r20home .promo{border-radius:18px;background:#3A1A1E;border:1px solid rgba(232,138,154,.45);padding:14px 16px;display:flex;align-items:center;gap:14px;text-decoration:none;color:#FFE4E8;cursor:pointer;width:100%;text-align:left;font:inherit}
+#r20home .promo i{width:46px;height:46px;border-radius:14px;background:#8E2F3A;display:flex;align-items:center;justify-content:center;flex:none}
+#r20home .promo b{display:block;font-size:15px}
+#r20home .promo span{font-size:12.5px;color:#F2B8C2}
+#r20home h2{margin:6px 0 0;font-size:19px;color:#F3EAD7;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline}
+#r20home h2 small{font-size:12px;color:#A7B1C0;letter-spacing:0}
+#r20home .cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+#r20home .ctile{--c:#C9A45C;border-radius:18px;background:#111A28;border:1px solid color-mix(in srgb,var(--c) 50%,transparent);padding:12px;display:flex;flex-direction:column;gap:10px;cursor:pointer;color:inherit;font:inherit;text-align:left;min-height:96px}
+#r20home .ctile.big{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;min-height:0}
+#r20home .ctile img{width:48px;height:48px;border-radius:10px}
+#r20home .ctile.big img{width:64px;height:64px;border-radius:12px}
+#r20home .ctile .t{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex:1}
+#r20home .ctile .t b{font-size:15px;color:#F3EAD7}
+#r20home .ctile.big .t b{font-size:17px}
+#r20home .ctile .t>span{font-size:15px;font-weight:700;color:color-mix(in srgb,var(--c) 75%,#fff);font-variant-numeric:tabular-nums}
+#r20home .ctile .s{display:block;font-size:12px!important;color:#A7B1C0!important;font-weight:400!important;margin-top:2px}
+#r20home .brands{border-radius:18px;background:#111A28;border:1px solid rgba(201,164,92,.35);padding:14px 16px;display:flex;align-items:center;gap:14px;color:#F3EAD7;cursor:pointer;width:100%;text-align:left;font:inherit}
+#r20home .brands b{display:block;font-size:15px}
+#r20home .brands span{font-size:12.5px;color:#A7B1C0}
+#r20home .brands em{margin-left:auto;font-style:normal;color:#E8CD8A;font-size:20px}
+@media (min-width:901px){#r20home .hero{border-radius:24px;margin-top:20px;background-position:right 0 top 0}#r20home .cats{grid-template-columns:repeat(4,minmax(0,1fr))}#r20home .ctile.big{grid-column:span 2}}
+body.shon #r20home,body.kbon #r20home,body.solo #r20home{display:none}
+body.r20 #promotog{display:none!important}
+body.r20 #promotog+*{margin-top:0}
+/* 品牌檔案區標題 */
+section.bhead{max-width:1060px;margin:28px auto 10px;padding:0 16px;color:#DCE2EA}
+section.bhead h2{margin:0;font-size:21px;color:#F3EAD7;letter-spacing:1px;display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(201,164,92,.35);padding-top:20px}
+section.bhead h2 small{font-size:12px;color:#A7B1C0;letter-spacing:0}
+section.bhead p{margin:6px 0 0;font-size:13px;color:#A7B1C0}
+/* 商品卡裡的品牌故事（摺疊） */
+section.card .r20brand p{margin:0 0 8px;line-height:1.75}
+section.card .r20brand a.go{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border-radius:12px;border:1px solid rgba(201,164,92,.45);color:#E8CD8A;text-decoration:none;font-size:14px}
+/* 底部工具列：巧克力沒有「返回」，改三等分 */
+html body.r20 #pnwrap{left:var(--l)!important;width:calc(var(--w)*2/3)!important;border-radius:20px 0 0 20px!important;border-left:1px solid rgba(201,164,92,.45)!important}
+html body.r20 #ftop{left:calc(var(--l) + var(--w)*2/3)!important;width:calc(var(--w)/3)!important}
+#r20home .ctile,#r20home .ctile *{letter-spacing:0!important}
+#r20home .ctile.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px;min-height:0}
+@media (min-width:901px){#r20home .ctile.wide{grid-column:span 2}}
+</style><script id="r20-c-js">(function(){
+'use strict';
+document.body.classList.add('r20');
+var D;try{D=JSON.parse(document.getElementById('DATA').textContent);}catch(e){return;}
+var P=D.P||[],B=D.BRANDS||[],C=D.CATS||[];
+var BYB={};B.forEach(function(b){BYB[b.name]=b;});
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var IMG={'精品禮盒':'giftbox','松露・夾心球':'truffle','片裝・排塊':'bar','酒心巧克力':'liqchoc','餅乾・威化':'wafer','分享包・零嘴':'snack','軟糖・糖果':'candy','兒童・玩具組':'toy','堅果・鹹點':'nuts','沖泡飲品':'drink'};
+var COL={'精品禮盒':'#D4A85A','餅乾・威化':'#C9925E','片裝・排塊':'#B07A55','分享包・零嘴':'#E08A5C','軟糖・糖果':'#E07A9A','松露・夾心球':'#C79B74','兒童・玩具組':'#6FB0D8','酒心巧克力':'#B4587A','堅果・鹹點':'#BFA66A','沖泡飲品':'#8FB08A'};
+var SUB={'精品禮盒':'Godiva・Venchi・Guylian 等送禮款'};
+/* 首頁區塊 */
+function home(){
+ var main=document.getElementById('main'),list=document.getElementById('list');
+ if(!main||!list||document.getElementById('r20home'))return;
+ var cnt={};P.forEach(function(p){cnt[p.cat]=(cnt[p.cat]||0)+1;});
+ var cats=C.map(function(c){return c.n;}).filter(function(n){return cnt[n];});
+ var promoTxt=((document.getElementById('promotog')||{}).textContent||'').replace(/^\s*打開\s*/,'').trim();
+ var h='<div class="hero"><h1>巧克力<br>速讀檔案</h1>'
+  +'<div class="stats"><div><b>'+P.length+'</b><span>項商品卡</span></div><div><b>'+cats.length+'</b><span>大類</span></div><div><b>'+B.length+'</b><span>個品牌檔案</span></div></div></div>'
+  +'<div class="row"><button type="button" class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>搜尋品名、品牌、編號、EAN</button>'
+  +'<button type="button" class="promo"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFE4E8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.6 2.6 21.4 11.4a2 2 0 0 1 0 2.8l-7.2 7.2a2 2 0 0 1-2.8 0L2.6 12.6A2 2 0 0 1 2 11.2V4a2 2 0 0 1 2-2h7.2a2 2 0 0 1 1.4.6z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></i><span style="flex:1"><b>本月巧克力活動</b><span>'+esc(promoTxt?promoTxt.replace(/^10 月折扣專區/,'').replace(/^（|）$/g,''):'折扣、單一促銷價、滿額贈一頁查完')+'</span></span></button>'
+  +'<h2>依類別瀏覽<small>共 '+P.length+' 項</small></h2><div class="cats">';
+ cats.forEach(function(c,i){
+  var odd=(cats.length-1)%2===1&&i===cats.length-1;
+  h+='<button type="button" class="ctile'+(i===0?' big':'')+(odd?' wide':'')+'" data-cat="'+esc(c)+'" style="--c:'+(COL[c]||'#C9A45C')+'"><img src="img/brand/cat/'+(IMG[c]||'giftbox')+'.webp" alt="" loading="lazy">'
+   +'<span class="t"><b>'+esc(c)+(i===0&&SUB[c]?'<span class="s">'+SUB[c]+'</span>':'')+'</b><span>'+cnt[c]+'</span></span></button>';
+ });
+ h+='</div><button type="button" class="brands"><span style="flex:1"><b>品牌檔案</b><span>'+B.length+' 個品牌的故事、年表、官方賣點</span></span><em>›</em></button></div>';
+ var d=document.createElement('section');d.id='r20home';d.setAttribute('aria-label','首頁');d.innerHTML=h;
+ main.insertBefore(d,main.firstChild);
+ d.querySelector('.srch').addEventListener('click',function(){var b=document.getElementById('xwsb');if(b){b.click();return;}var q=document.getElementById('q');if(q){var f=document.querySelector('[data-open="fpanel"],#fbtn,.fbtn-open');if(f)f.click();setTimeout(function(){q.focus();},150);}});
+ d.querySelector('.promo').addEventListener('click',function(){var t=document.getElementById('promotog');if(t){t.click();var pp=document.getElementById('promopanel');if(pp)setTimeout(function(){pp.scrollIntoView({behavior:'smooth',block:'start'});},80);}else location.href='https://xsos32-design.github.io/chocolatepromo/';});
+ d.querySelector('.brands').addEventListener('click',function(){var t=document.getElementById('brandhead');if(t)window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});});
+ d.addEventListener('click',function(e){var b=e.target.closest('.ctile');if(!b)return;
+  var chip=document.querySelector('.dchip[data-cat="'+b.getAttribute('data-cat')+'"]');if(chip)chip.click();
+  setTimeout(function(){var t=list.querySelector('section.card:not(.bcard):not([style*="display: none"])')||list;window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-70,behavior:'smooth'});},120);});
+}
+/* 商品卡：段落改成可摺疊、加品牌故事 */
+var BYID={};P.forEach(function(p){BYID[p.id]=p;});
+function fold(sec){
+ var h=sec.querySelector(':scope>h3');if(!h)return;
+ var d=document.createElement('details');d.className='sec fold';
+ var s=document.createElement('summary');s.appendChild(h);d.appendChild(s);
+ while(sec.firstChild)d.appendChild(sec.firstChild);
+ sec.parentNode.replaceChild(d,sec);
+}
+function enh(card){
+ if(card.getAttribute('data-r20'))return;card.setAttribute('data-r20','1');
+ if(card.classList.contains('bcard'))return;
+ var p=BYID[card.id];var body=card.querySelector(':scope>.body');if(!p||!body)return;
+ [].forEach.call(body.querySelectorAll(':scope>.sec'),function(sec){var t=(sec.querySelector(':scope>h3')||{}).textContent||'';if(/規格|銷售重點/.test(t))fold(sec);});
+ var b=BYB[p.brand];
+ if(b&&(b.story||b.tag)){
+  var d=document.createElement('details');d.className='sec fold r20brand';
+  d.innerHTML='<summary><h3>品牌故事</h3></summary>'+(b.story?'<p>'+esc(b.story)+'</p>':'<p>'+esc(b.tag)+'</p>')+'<a class="go" href="#'+esc(b.id)+'">看 '+esc(b.name_disp||b.name)+' 完整品牌檔案</a>';
+  var warn=body.querySelector(':scope>.warn');
+  body.insertBefore(d,warn||null);
+ }
+}
+function scan(){[].forEach.call(document.querySelectorAll('section.card:not([data-r20])'),enh);}
+var L=document.getElementById('list');
+if(L){var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;scan();});}).observe(L,{childList:true,subtree:true});}
+function go(){home();scan();}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+setTimeout(go,800);
 })();
 </script><style id="r17-font">html body,html body *:not(svg):not(path):not(circle):not(rect){font-family:"Microsoft JhengHei","微軟正黑體",system-ui,-apple-system,"PingFang TC","Noto Sans TC","Noto Sans CJK TC",sans-serif!important}
 section.card .en,#r16home .en,.en,i.en,.navhead .sub{font-style:normal!important}</style></body>
