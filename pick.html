@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<html lang="zh-Hant" class="t23 noir"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#060D18"><title>送禮推薦｜昇恆昌巧克力速讀檔案</title>
 <meta name="description" content="依送禮對象、預算、類別、口味挑巧克力，並算出湊折扣最划算的組合。個人整理學習筆記。">
 <link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-180.png">
 <style>
-:root{--bg:#060D18;--bg2:#0B1626;--line:rgba(201,164,92,.28);--gold:#C9A45C;--gold2:#E8CD8A;--ink:#F3E9D2;--dim:#9DAEBC;--dim2:#6E7F94}
+:root{--bg:#100E0B;--bg2:#1B1713;--line:rgba(201,164,92,.28);--gold:#C9A45C;--gold2:#E8CD8A;--ink:#F3E9D2;--dim:#B3AFA6;--dim2:#8A8478}
 *{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Microsoft JhengHei","微軟正黑體",system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif}
 a{color:inherit}
-header{position:relative;padding:28px 18px 22px;background:#060D18 url(img/brand/hero.webp) right center/auto 120% no-repeat;border-bottom:1px solid var(--line)}
-header::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,11,20,.96),rgba(5,11,20,.8) 55%,rgba(5,11,20,.35))}
+header{position:relative;padding:28px 18px 22px;background:#100E0B url(img/brand/hero.webp) right center/auto 120% no-repeat;border-bottom:1px solid var(--line)}
+header::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,12,9,.96),rgba(14,12,9,.8) 55%,rgba(14,12,9,.35))}
 header>*{position:relative}.back{display:inline-block;font-size:13px;color:var(--gold2);text-decoration:none;border:1px solid var(--line);padding:3px 10px;border-radius:999px;margin-bottom:10px}
-h1{margin:0;font-size:26px;line-height:1.3;letter-spacing:.04em}header p{margin:6px 0 0;color:#C9D4E3;font-size:14px;max-width:46ch}
+h1{margin:0;font-size:26px;line-height:1.3;letter-spacing:.04em}header p{margin:6px 0 0;color:#DCD8D0;font-size:14px;max-width:46ch}
 main{max-width:1100px;margin:0 auto;padding:16px}
 .step{margin:0 0 14px}.step h2{margin:0 0 8px;font-size:14px;line-height:1;color:var(--gold);letter-spacing:.12em}
-.step h2 b{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:8px;border-radius:50%;background:var(--gold);color:#060D18;font:700 12px/1 sans-serif}
+.step h2 b{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:8px;border-radius:50%;background:var(--gold);color:#100E0B;font:700 12px/1 sans-serif}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{appearance:none;border:1px solid var(--line);background:var(--bg2);color:var(--ink);padding:8px 14px;border-radius:999px;font:inherit;font-size:14px;cursor:pointer;min-height:40px}
-.chip[aria-pressed=true]{background:#C9A45C;color:#060D18;border-color:transparent;font-weight:700}
+.chip[aria-pressed=true]{background:#C9A45C;color:#100E0B;border-color:transparent;font-weight:700}
 h3.sec{margin:22px 0 4px;font-size:18px;color:var(--ink)}p.sub{margin:0 0 10px;color:var(--dim);font-size:13px}
 .combos{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.cb{border:1px solid rgba(232,138,154,.45);border-radius:14px;background:#0C1729;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.cb{border:1px solid rgba(232,138,154,.45);border-radius:14px;background:#1D1914;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
 .cb .lab{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
 .cb .lab span{font-size:12.5px;color:#F2A6B4;border:1px solid rgba(232,138,154,.55);border-radius:999px;padding:1px 8px}
 .cb .tot{font-weight:700;color:var(--gold2);font-size:18px;font-variant-numeric:tabular-nums}
@@ -32,17 +32,17 @@ h3.sec{margin:22px 0 4px;font-size:18px;color:var(--ink)}p.sub{margin:0 0 10px;c
 .bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 10px;padding-top:12px;border-top:1px solid var(--line)}
 .bar b{color:var(--gold2)}.bar select{background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit;font-size:14px;min-height:38px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
-.card{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#0B1626;text-decoration:none;min-width:0}
+.card{display:flex;gap:12px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#1B1713;text-decoration:none;min-width:0}
 .card .ph{flex:0 0 76px;height:96px;border-radius:8px;background:#fff center/contain no-repeat;border:1px solid rgba(201,164,92,.2)}
 .tx{min-width:0;display:flex;flex-direction:column;gap:3px}
-.nm{font-weight:700;font-size:15px;line-height:1.35}.mt{font-size:12.5px;color:var(--dim)}.q{font-size:13px;color:#C9D4E3;line-height:1.5}
+.nm{font-weight:700;font-size:15px;line-height:1.35}.mt{font-size:12.5px;color:var(--dim)}.q{font-size:13px;color:#DCD8D0;line-height:1.5}
 .pr{font-weight:700;color:var(--gold2)}.pm{display:inline-block;margin-top:2px;padding:1px 8px;border-radius:999px;border:1px solid rgba(232,138,154,.55);color:#F2A6B4;font-size:12px;width:max-content;max-width:100%}
 .tg{display:flex;flex-wrap:wrap;gap:4px}.tg span{font-size:11.5px;color:var(--gold2);border:1px solid var(--line);border-radius:999px;padding:0 7px}
 .empty{padding:24px;text-align:center;color:var(--dim);border:1px dashed var(--line);border-radius:12px}
 .more{display:block;margin:16px auto;padding:10px 22px;border-radius:999px;border:1px solid var(--line);background:var(--bg2);color:var(--gold2);font:inherit;cursor:pointer;min-height:42px}
 .ended{margin:12px 0;padding:12px 14px;border-radius:12px;background:#3A2A12;border:1px solid rgba(232,190,110,.55);color:#F5D9A8;font-size:14px}
 footer{padding:20px 16px 40px;text-align:center;color:var(--dim2);font-size:12px}
-@media (max-width:600px){h1{font-size:23px}header::before{background:linear-gradient(180deg,rgba(5,11,20,.9),rgba(5,11,20,.82))}.grid,.combos{grid-template-columns:1fr}}
+@media (max-width:600px){h1{font-size:23px}header::before{background:linear-gradient(180deg,rgba(14,12,9,.9),rgba(14,12,9,.82))}.grid,.combos{grid-template-columns:1fr}}
 </style></head><body>
 <header><a class="back" href="./">‹ 回巧克力速讀檔案</a><h1>送禮推薦</h1><p>選送給誰、預算、類別和口味，先列出湊折扣最划算的組合，再列單品。條件都可以不選，點商品就打開完整卡片。價格與折扣以現場價卡、POS 為準。</p></header>
 <main>
