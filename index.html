@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant" class="t23 noir">
-<head>
+<head><link id="r38font" rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&display=swap" media="print" onload="this.media='all'"><script id="r38nb">function _nb(t){t=String(t);t=t.replace(/(\d)\s+(年份|年|入|顆|片|支|包|件|g|G|kg|ml|mL|ML|cl|CL|L|公升|%)/g,"$1\u00a0$2");t=t.replace(/(\S)\s+(\d{1,4}\u00a0(?:年份|年))/g,"$1\u00a0$2");return t;}</script>
 <meta charset="utf-8"><meta name="theme-color" content="#060D18"><!--brand-og--><meta name="description" content="十大分類巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:type" content="website"><meta property="og:url" content="https://xsos32-design.github.io/chocolatewiki/"><meta property="og:title" content="昇恆昌巧克力速讀檔案"><meta property="og:description" content="十大分類巧克力商品速讀：品牌故事、賣點與 10 月折扣。個人整理學習筆記。"><meta property="og:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://xsos32-design.github.io/chocolatewiki/img/brand/og.jpg"><link rel="preload" as="image" href="img/brand/hero.webp" fetchpriority="high"><!--/brand-og-->
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 
@@ -616,6 +616,13 @@ html.noir:not(#_a):not(#_b) section.card .shots>.shot .lbl{background:rgba(14,12
 
 /* r37 效能：畫面外的商品卡先不排版，捲到附近才排（大幅減少找字、捲動的卡頓） */
 html.noir #list>section.card{content-visibility:auto;contain-intrinsic-size:auto 1100px}
+
+/* r38 排版：標題斷行平均、警語一行放得下 */
+html.noir :is(h1,h2,h3,.zh,.tile-h h3,.cal-head h2,.r24hd h2){text-wrap:balance}
+html.noir :is(p,li,.ld,.d){text-wrap:pretty}
+@media (max-width:600px){html.noir .ban{letter-spacing:3px!important;font-size:14px!important;text-wrap:balance}}
+html.noir:not(#_a):not(#_b) li.galrow .line>.r15th.none{grid-area:th!important;border-radius:10px;background:#1A1712 url(https://xsos32-design.github.io/dutyliquorwiki/img/brand/ph_liq.webp) center/62% auto no-repeat!important;border:1px solid rgba(201,164,92,.32)!important}
+html.noir:not(#_a):not(#_b) li.galrow .line>.r15th.none+span{grid-area:nm!important}
 </style></head>
 <body>
 <div id="menu"><button id="mb">&#9776; 目錄</button><b>昇恆昌巧克力速讀檔案</b><button id="fsz" type="button" aria-pressed="false" title="字體放大／還原">A+</button></div>
@@ -797,7 +804,7 @@ function card(p){
  h+='</div><div class="meta"><div class="eyebrow"><span class="no">'+p.no+'</span><span class="cat">'+(CATICON[p.cat]||'')+' '+esc(p.cat)+'</span>'
    +'<button type="button" class="shb'+((window.SHELF&&window.SHELF[p.id])?' on':'')+'" data-sh="'+p.id+'">'+((window.SHELF&&window.SHELF[p.id])?'\u2714 在架上':'\u002B 在架上')+'</button>'
    +(p.dfLimited?'<span class="cat" style="border-color:rgba(201,164,92,.9);background:rgba(201,164,92,.12)">'+esc(p.dfText||'免稅限定')+'</span>':'')+'</div>';
- h+='<div class="zh">'+esc(p.nameZh)+'</div><div class="en">'+esc(p.nameEn)+'</div><div class="specs">';
+ h+='<div class="zh">'+_nb(esc(p.nameZh))+'</div><div class="en">'+esc(p.nameEn)+'</div><div class="specs">';
  [['品牌 BRAND',p.brand],['類別 CATEGORY',p.cat],['產地 ORIGIN',p.group],['規格 SPEC',p.spec],
   ['品號 SKU',p.code]].forEach(function(kv){
   if(kv[1])h+='<div class="spec"><div class="k">'+kv[0]+'</div><div class="v">'+esc(kv[1])+'</div></div>';});
@@ -1813,7 +1820,7 @@ if(typeof window.plain!=='function'){window.plain=function(t){return String(t==n
   var sel=id?'.shb[data-sh="'+id+'"]':'.shb';
   [].forEach.call(document.querySelectorAll(sel),function(b){
    var on=!!window.SHELF[b.getAttribute('data-sh')];
-   b.classList.toggle('on',on); b.textContent=on?'\u2714 在架上':'+ 在架上';
+   b.classList.toggle('on',on); if(b.getAttribute('data-r38')!==String(on)){b.setAttribute('data-r38',String(on));b.textContent=on?'\u2714 在架上':'+ 在架上';}
   });
   var n=ids().length;
   var f=document.querySelector('.fbtn[data-f="shelf"]');
@@ -3239,7 +3246,7 @@ function scan(){[].forEach.call(document.querySelectorAll('section.card'),addBtn
 function tray(){var t=document.getElementById('c20tray');if(!t){t=document.createElement('div');t.id='c20tray';t.setAttribute('role','region');t.setAttribute('aria-label','比較清單');document.body.appendChild(t);
   t.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(b.classList.contains('go'))openV();else if(b.classList.contains('clr')){SEL=[];sync();}});}return t;}
 function sync(quiet){
- [].forEach.call(document.querySelectorAll('.cmpc'),function(b){var on=SEL.indexOf(b.getAttribute('data-cmp'))>=0;b.setAttribute('aria-pressed',on?'true':'false');b.textContent=on?'已選比較':'比較';});
+ [].forEach.call(document.querySelectorAll('.cmpc'),function(b){var on=SEL.indexOf(b.getAttribute('data-cmp'))>=0;b.setAttribute('aria-pressed',on?'true':'false');if(b.getAttribute('data-r38')!==String(on)){b.setAttribute('data-r38',String(on));b.textContent=on?'已選比較':'比較';}});
  if(quiet&&!SEL.length)return;
  var t=tray();if(!SEL.length){t.classList.remove('on');return;}
  t.classList.add('on');
@@ -3560,7 +3567,7 @@ try{new MutationObserver(later).observe(document.body,{childList:true,subtree:tr
 [400,1200,3000,6000,10000].forEach(function(ms){setTimeout(scan,ms);});
 if(document.readyState!=='loading')scan();else document.addEventListener('DOMContentLoaded',scan);
 })();
-</script><style id="r24">@import url(https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600&display=swap);
+</script><style id="r24">
 /* r24 每日精選、品牌故事入口、卡片品牌連結、風味雷達圖（暗金 Noir） */
 .r24day{display:flex;flex-direction:column;gap:10px}
 .r24hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
