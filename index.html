@@ -573,6 +573,17 @@ html.noir:not(#_a):not(#_b) section.card .tastebar.r49t{cursor:pointer;position:
 html.noir:not(#_a):not(#_b) section.card .tastebar.r49t::after{content:"風味輪廓 ▾";display:inline-block;margin-left:8px;font-size:11.5px;color:#E9CF8E;border:1px solid rgba(201,162,77,.45);border-radius:999px;padding:2px 9px;vertical-align:middle}
 html.noir:not(#_a):not(#_b) section.card.r49f .tastebar.r49t::after{content:"收起輪廓 ▴"}
 @media print{section.card .talkbox{max-height:none!important}section.card .talkbox::after{display:none!important}section.card .r24rd,section.card .scbox{display:block!important}}
+</style><style id="r52t">
+@media(max-width:640px){
+.kbchap .kbtblwrap:has(table.kbtbl:not(.r41t)){overflow:visible!important}
+.kbchap table.kbtbl:not(.r41t){display:block!important;width:auto!important;min-width:0!important;border:0!important;background:none!important}
+.kbchap table.kbtbl:not(.r41t) thead{display:none!important}
+.kbchap table.kbtbl:not(.r41t) tbody{display:block!important}
+.kbchap table.kbtbl:not(.r41t) tr{display:block!important;margin:0 0 8px!important;padding:10px 12px!important;border:1px solid rgba(201,162,77,.24)!important;border-radius:12px!important;background:#16130f!important}
+.kbchap table.kbtbl:not(.r41t) th,.kbchap table.kbtbl:not(.r41t) td{display:block!important;width:auto!important;max-width:none!important;padding:2px 0!important;border:0!important;background:none!important;text-align:left!important;white-space:normal!important}
+.kbchap table.kbtbl:not(.r41t) tr>:first-child{color:#E9CF8E!important;font-weight:700!important;font-size:14px!important;padding-bottom:4px!important}
+.kbchap table.kbtbl:not(.r41t) td[data-l]:not(:first-child)::before{content:attr(data-l);display:block;font-size:11px;letter-spacing:1px;color:#ADA69A;margin-top:4px}
+}
 </style><style id="r32">/* r32 質感層：AI 生成材質（皮革底紋、絲絨、拉絲香檳金）套用到全站按鈕與區塊 */
 html.noir{--r32g:url(img/brand/tex_gold.webp);--r32v:url(img/brand/tex_velvet.webp);--r32l:url(img/brand/tex_leather.webp)}
 html.noir body{background-color:#0B0A09;background-image:linear-gradient(rgba(11,10,9,.62),rgba(11,10,9,.62)),var(--r32l);background-size:auto,256px 256px;background-attachment:scroll}
@@ -3768,5 +3779,13 @@ var n=0;(function tick(){var box=document.getElementById(SITE==='liq'?'dchk':'r4
  },true);
  var n=0;(function tick(){mark();if(++n<40)setTimeout(tick,n<10?600:2500);})();
  document.addEventListener('scroll',function(){clearTimeout(window._r49m);window._r49m=setTimeout(mark,250);},{passive:true});
+})();</script><script id="r52tj">(function(){
+ function lab(){[].forEach.call(document.querySelectorAll('table.kbtbl:not(.r41t):not([data-r52])'),function(t){
+  t.setAttribute('data-r52','1'); var h=t.tHead&&t.tHead.rows[0]; if(!h) return;
+  var L=[].map.call(h.cells,function(c){return c.textContent.trim();});
+  [].forEach.call(t.tBodies,function(b){[].forEach.call(b.rows,function(r){[].forEach.call(r.cells,function(c,i){if(i&&L[i])c.setAttribute('data-l',L[i]);});});});
+ });}
+ lab(); var n=0;(function k(){lab(); if(++n<20) setTimeout(k,n<6?500:2000);})();
+ document.addEventListener('click',function(){setTimeout(lab,300);},true);
 })();</script></body>
 </html>
