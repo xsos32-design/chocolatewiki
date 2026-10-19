@@ -565,6 +565,14 @@ details.r41d summary{cursor:pointer;font-weight:600}
 #r41gapbox .chkrow:hover{background:rgba(201,162,77,.12)}#r41gapbox .chkrow i{font-style:normal;opacity:.6;font-size:12px;min-width:54px}
 #r41gapbox .chkrow span{margin-left:auto;opacity:.6;font-size:12px}
 .r41src{margin-top:4px;font-size:12px;opacity:.75}.r41src a{margin:0 3px;color:inherit;text-decoration:underline}
+</style><style id="r49k">#kbnavbar .kbnav.kbmini{margin-left:auto;font-size:11.5px;padding:6px 11px;opacity:.72;border-style:dashed}#kbnavbar .kbnav.kbmini.on{opacity:1}#kbnavbar{display:flex;flex-wrap:wrap;align-items:center}</style><style id="r49s">
+html.noir:not(#_a):not(#_b) section.card .talkbox:not(.r49x){max-height:190px;overflow:hidden;position:relative;cursor:pointer}
+html.noir:not(#_a):not(#_b) section.card .talkbox:not(.r49x)::after{content:"展開完整話術 ▾";position:absolute;left:4px;right:0;bottom:0;height:64px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;font-size:12.5px;letter-spacing:1px;color:#E9CF8E;background:linear-gradient(rgba(20,18,15,0),rgb(20,18,15) 62%);pointer-events:none}
+html.noir:not(#_a):not(#_b) section.card:not(.r49f) .r24rd,html.noir:not(#_a):not(#_b) section.card:not(.r49f) .scbox{display:none}
+html.noir:not(#_a):not(#_b) section.card .tastebar.r49t{cursor:pointer;position:relative}
+html.noir:not(#_a):not(#_b) section.card .tastebar.r49t::after{content:"風味輪廓 ▾";display:inline-block;margin-left:8px;font-size:11.5px;color:#E9CF8E;border:1px solid rgba(201,162,77,.45);border-radius:999px;padding:2px 9px;vertical-align:middle}
+html.noir:not(#_a):not(#_b) section.card.r49f .tastebar.r49t::after{content:"收起輪廓 ▴"}
+@media print{section.card .talkbox{max-height:none!important}section.card .talkbox::after{display:none!important}section.card .r24rd,section.card .scbox{display:block!important}}
 </style><style id="r32">/* r32 質感層：AI 生成材質（皮革底紋、絲絨、拉絲香檳金）套用到全站按鈕與區塊 */
 html.noir{--r32g:url(img/brand/tex_gold.webp);--r32v:url(img/brand/tex_velvet.webp);--r32l:url(img/brand/tex_leather.webp)}
 html.noir body{background-color:#0B0A09;background-image:linear-gradient(rgba(11,10,9,.62),rgba(11,10,9,.62)),var(--r32l);background-size:auto,256px 256px;background-attachment:scroll}
@@ -1224,9 +1232,9 @@ buildExcl(); build(); apply();
 (function(){
  var KB=D.KB;
  var host=document.getElementById('kbview');
- var nb=KB.map(function(k){return '<button type="button" class="kbnav" data-kb="'+k.id+'">'+esc(k.t.split(' ')[0])+'</button>';}).join('');
+ /*r49ct*/var CG=[['基礎知識',['t-basic','t-make','k-class','k-origin','t-store']],['銷售話術',['t-talk','k-scene','k-best','k-story','k-mnemo']],['規定與客人問答',['k-cfaq','t-faq','t-allergen','t-rule']],['品牌講義',['venchi']],['資料檢查',['x-gap'],1]];var _u={};CG.forEach(function(g){g[1].forEach(function(i){_u[i]=1;});});KB.forEach(function(k){if(!_u[k.id])CG[1][1].push(k.id);});var _by={};KB.forEach(function(k){_by[k.id]=k;});KB=[];CG.forEach(function(g){g[1].forEach(function(i){if(_by[i])KB.push(_by[i]);});});var nb=CG.map(function(g,i){return '<button type="button" class="kbnav'+(g[2]?' kbmini':'')+'" data-kb="cg'+i+'" data-list="'+g[1].join(',')+'">'+g[0]+'</button>';}).join('');
  var body=KB.map(function(k,i){
-  return '<div class="kbchap'+(i?'':' on')+'" data-kb="'+k.id+'"><h2>'+esc(k.t)+'</h2>'
+  return '<div class="kbchap'+(CG[0][1].indexOf(k.id)>=0?' on':'')+'" data-kb="'+k.id+'"><h2>'+esc(k.t)+'</h2>'
    +(k.src?'<p class="kbdesc">教材來源：'+esc(k.src)+'</p>':'')
    +(k.html?k.html:'')
    +(k.rows&&k.rows.length?'<section class="kbsec"><div class="kbtblwrap"><table class="kbtbl"><tbody>'
@@ -1238,8 +1246,8 @@ buildExcl(); build(); apply();
  var first=host.querySelector('.kbnav'); if(first)first.classList.add('on');
  host.addEventListener('click',function(e){
   var b=e.target.closest?e.target.closest('.kbnav'):null; if(!b)return;
-  var k=b.getAttribute('data-kb');
-  [].forEach.call(host.querySelectorAll('.kbchap'),function(c){c.classList.toggle('on',c.getAttribute('data-kb')===k);});
+  var L=(b.getAttribute('data-list')||b.getAttribute('data-kb')).split(',');
+  [].forEach.call(host.querySelectorAll('.kbchap'),function(c){c.classList.toggle('on',L.indexOf(c.getAttribute('data-kb'))>=0);});
   [].forEach.call(host.querySelectorAll('.kbnav'),function(c){c.classList.toggle('on',c===b);});
   host.scrollTop=0;
  });
@@ -3751,5 +3759,14 @@ var n=0;(function tick(){var box=document.getElementById(SITE==='liq'?'dchk':'r4
  if(box&&!document.getElementById('r41gapbox')&&(SITE!=='liq'||!/計算中/.test(box.textContent))){if(build(box))return;}
  if(++n<60)setTimeout(tick,500);})();
 })();
-</script></body>
+</script><script id="r49sj">(function(){
+ function mark(root){[].forEach.call((root||document).querySelectorAll('section.card .tastebar:not(.r49t)'),function(t){var c=t.closest('section.card');if(c&&(c.querySelector('.r24rd')||c.querySelector('.scbox')))t.classList.add('r49t');});}
+ document.addEventListener('click',function(e){
+  var t=e.target; if(!t||!t.closest) return;
+  var tb=t.closest('section.card .talkbox:not(.r49x)'); if(tb){tb.classList.add('r49x');return;}
+  var tt=t.closest('section.card .tastebar.r49t'); if(tt){var c=tt.closest('section.card'); if(c)c.classList.toggle('r49f');}
+ },true);
+ var n=0;(function tick(){mark();if(++n<40)setTimeout(tick,n<10?600:2500);})();
+ document.addEventListener('scroll',function(){clearTimeout(window._r49m);window._r49m=setTimeout(mark,250);},{passive:true});
+})();</script></body>
 </html>
