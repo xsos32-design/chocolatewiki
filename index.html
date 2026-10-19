@@ -589,7 +589,7 @@ html.noir:not(#_a):not(#_b) section.card.r49f .tastebar.r49t::after{content:"收
 details.sec.fold>summary::after{content:'▾ 展開';margin-left:auto;font-size:11px;color:#E9CF8E;border:1px solid rgba(201,164,92,.4);background:rgba(201,164,92,.10);border-radius:999px;padding:2px 9px;white-space:nowrap}
 details.sec.fold[open]>summary::after{content:'▴ 收起'}
 .prombar .pm{flex-wrap:wrap;row-gap:4px}.prombar .pm i{flex:none;white-space:nowrap}
-</style><style id="r32">/* r32 質感層：AI 生成材質（皮革底紋、絲絨、拉絲香檳金）套用到全站按鈕與區塊 */
+</style><style id="r54">.rwbar .r54per{display:block;margin-top:3px;font-size:11.5px;opacity:.8}</style><style id="r32">/* r32 質感層：AI 生成材質（皮革底紋、絲絨、拉絲香檳金）套用到全站按鈕與區塊 */
 html.noir{--r32g:url(img/brand/tex_gold.webp);--r32v:url(img/brand/tex_velvet.webp);--r32l:url(img/brand/tex_leather.webp)}
 html.noir body{background-color:#0B0A09;background-image:linear-gradient(rgba(11,10,9,.62),rgba(11,10,9,.62)),var(--r32l);background-size:auto,256px 256px;background-attachment:scroll}
 
@@ -865,7 +865,7 @@ function card(p){
      +(x.sub?'<i>'+esc(x.sub)+'</i>':'')+'<i>'+esc(x.k)+'</i></span>';}).join('')+'</div>';
  }
  if(p.tg)h+='<div class="tgbar">\u{1F3AF} '+esc(p.tg)+'</div>';
- if(p.rw)h+='<div class="rwbar">\u{1F4B0} '+esc(p.rw)+'</div>';
+ if(p.rw)h+='<div class="rwbar">\u{1F4B0} '+esc(p.rw)+'<small class="r54per">適用期間：2026/9/1–9/30（名單期間外是否延續，以公司最新公告為準）</small></div>';
  h+='</div></div><div class="body">';
  if(p.pos)h+='<div class="sec" style="grid-column:1/-1"><h3>一句話定位 POSITIONING</h3><p style="font-family:\'Noto Serif TC\',serif;font-size:16px;color:#E8CD8A">'+esc(p.pos)+'</p></div>';
  var TK=[];
