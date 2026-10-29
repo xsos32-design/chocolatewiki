@@ -831,7 +831,17 @@ html.noir:not(#_a):not(#_b) li.galrow .line>.r15th.none+span{grid-area:nm!import
 #r116sheet .sc{display:block;width:100%;text-align:left;font:13px/1.45 inherit;padding:6px 10px 6px 24px;border:0;background:none;color:#D8CDB8;cursor:pointer}
 #r116sheet .sc:hover,#r116sheet .ch:hover{background:rgba(232,190,110,.12)}
 #r116sheet .more{font-size:12px;color:#9C9282;padding:2px 24px}
-@media print{#r116bar,#r116sheet{display:none!important}}
+#kbview #kbnavbar{position:sticky!important;top:var(--r116t,49px)!important;z-index:40;flex-wrap:nowrap!important;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;background:#120F0B;padding:8px 2px!important;box-shadow:0 8px 10px -9px rgba(0,0,0,.9)}
+#kbview #kbnavbar::-webkit-scrollbar{display:none}
+#kbview #kbnavbar .kbnav{flex:0 0 auto;white-space:nowrap}
+#r116bar{position:sticky;top:calc(var(--r116t,49px) + var(--r116n,46px));z-index:39;background:#120F0B;margin-top:0!important;padding:4px 2px 8px}
+#r116bar .r116all{position:sticky;left:0;z-index:2;background:#3A2E1C!important;box-shadow:8px 0 10px -6px #120F0B}
+.r116pn{display:flex;gap:8px;margin:18px 0 6px;flex-wrap:wrap}
+.r116pn button{flex:1 1 45%;min-width:0;text-align:left;font:600 13px/1.45 inherit;padding:10px 12px;border-radius:12px;border:1px solid rgba(232,190,110,.45);background:rgba(232,190,110,.08);color:#F3D9A4;cursor:pointer}
+.r116pn button.nx{text-align:right;margin-left:auto}
+.r116pn button.rel{flex-basis:100%;border-style:dashed;background:rgba(120,190,150,.08);border-color:rgba(120,190,150,.5);color:#BFE8CF}
+.r116pn small{display:block;font-weight:500;font-size:11px;color:#B9A98C;margin-bottom:2px}
+@media print{#r116bar,#r116sheet,.r116pn{display:none!important}}
 </style></head>
 <body class="r107solid">
 <div id="menu"><button id="mb">&#9776; 目錄</button><b>昇恆昌巧克力速讀檔案</b><button id="fsz" type="button" aria-pressed="false" title="字體放大／還原">A+</button></div>
@@ -4332,9 +4342,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  if(document.readyState==='complete')later();else window.addEventListener('load',later);
 })();
 </script><script id="r116toc-js">(function(){
-var G=null;
+var G=null,REL={"t-basic": ["cbean"], "k-origin": ["cbean", "cbrand"], "t-make": ["cmake"], "k-class": ["ctype"], "t-store": ["ctaste"], "cbean": ["t-basic", "k-origin"], "cmake": ["t-make"], "ctype": ["k-class"], "ctaste": ["t-store"], "cbrand": ["k-origin"]};
 function $(i){return document.getElementById(i);}
-function hdr(){var h=0;['xwbar'].forEach(function(i){var e=$(i);if(e)h+=e.offsetHeight;});var n=$('kbnavbar');if(n&&getComputedStyle(n).position==='sticky')h+=n.offsetHeight;return h+12;}
+function hdr(){var h=0;['xwbar','kbnavbar','r116bar'].forEach(function(i){var e=$(i);if(e&&e.offsetParent!==null)h+=e.offsetHeight;});return h+10;}
+function vars(){var x=$('xwbar'),n=$('kbnavbar'),r=document.documentElement.style;r.setProperty('--r116t',(x?x.offsetHeight:0)+'px');r.setProperty('--r116n',(n?n.offsetHeight:0)+'px');}
 function tabs(){return [].slice.call(document.querySelectorAll('#kbview .kbnav'));}
 function listOf(b){var l=b.getAttribute('data-list');if(l)return l.split(',');var k=b.getAttribute('data-kb');return G&&G[k]?G[k]:[k];}
 function chap(id){return document.querySelector('#kbview .kbchap[data-kb="'+id+'"]');}
@@ -4355,7 +4366,25 @@ function bar(){
  var t=curTab();if(!t){b.innerHTML='';return;}
  var L=listOf(t).filter(function(id){return chap(id)&&ctitle(chap(id));});
  b.innerHTML='<button type="button" class="r116all">全部章節</button>'+(L.length>1?L.map(function(id){return '<button type="button" class="r116c" data-c="'+id+'">'+esc(ctitle(chap(id)))+'</button>';}).join(''):'');
+ vars();t.parentNode.scrollLeft=Math.max(0,t.offsetLeft-24);pn();spy();
 }
+function pn(){var T=tabs();[].forEach.call(document.querySelectorAll('#kbview .r116pn'),function(x){x.remove();});
+ T.forEach(function(t,ti){var L=listOf(t).filter(function(id){return chap(id)&&ctitle(chap(id));});
+  L.forEach(function(id,i){var c=chap(id),h='';
+   if(i>0)h+='<button type="button" class="pv" data-c="'+L[i-1]+'"><small>上一章</small>← '+esc(ctitle(chap(L[i-1])))+'</button>';
+   if(i<L.length-1)h+='<button type="button" class="nx" data-c="'+L[i+1]+'"><small>下一章</small>'+esc(ctitle(chap(L[i+1])))+' →</button>';
+   else if(ti<T.length-1&&!T[ti+1].classList.contains('kbmini'))h+='<button type="button" class="nx" data-t="'+(ti+1)+'"><small>下一個分頁</small>'+esc(T[ti+1].textContent.trim())+' →</button>';
+   (REL[id]||[]).forEach(function(r){var rc=chap(r);if(!rc)return;var rt=-1;T.forEach(function(tt,k){if(listOf(tt).indexOf(r)>=0)rt=k;});h+='<button type="button" class="rel" data-c="'+r+'" data-rt="'+rt+'"><small>延伸閱讀・'+esc(rt>=0?T[rt].textContent.trim():'')+'</small>'+esc(ctitle(rc))+' →</button>';});
+   if(!h)return;var d=document.createElement('nav');d.className='r116pn';d.innerHTML=h;c.appendChild(d);});});}
+document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('.r116pn button');if(!x)return;
+ if(x.hasAttribute('data-t')){var t=tabs()[+x.getAttribute('data-t')];t.click();setTimeout(function(){var v=$('kbview');window.scrollTo({top:v.getBoundingClientRect().top+window.pageYOffset-60,behavior:'auto'});},350);return;}
+ if(x.classList.contains('rel')){go(tabs()[+x.getAttribute('data-rt')],chap(x.getAttribute('data-c')));return;}
+ go(null,chap(x.getAttribute('data-c')));});
+var spT=null;function spy(){var b=$('r116bar');if(!b||!document.body.classList.contains('kbon'))return;vars();var C=[].slice.call(b.querySelectorAll('.r116c'));if(!C.length)return;
+ var lim=hdr()+30,cur=C[0];C.forEach(function(x){var c=chap(x.getAttribute('data-c'));if(c&&c.getBoundingClientRect().top<=lim)cur=x;});
+ C.forEach(function(x){x.classList.toggle('cur',x===cur);});if(cur&&cur._on!==1){C.forEach(function(x){x._on=0;});cur._on=1;b.scrollLeft=Math.max(0,cur.offsetLeft-90);}}
+window.addEventListener('scroll',function(){if(spT)return;spT=setTimeout(function(){spT=null;spy();},120);},{passive:true});
+window.addEventListener('resize',vars);
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function sheet(){
  var sh=$('r116sheet');
@@ -4382,7 +4411,7 @@ function sheet(){
  });
  sh.innerHTML=h+'</div>';sh.hidden=false;var i=sh.querySelector('input');if(i&&window.innerWidth>720)i.focus();
 }
-document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#kbview .kbnav'))setTimeout(bar,80);},true);
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#kbview .kbnav'))setTimeout(bar,80);if(e.target.closest&&e.target.closest('#dkb,[data-r59="kb"]'))setTimeout(function(){vars();spy();},400);},true);
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var s=$('r116sheet');if(s)s.hidden=true;}});
 function init(){bar();var v=$('kbview');if(v&&!v._r116){v._r116=1;new MutationObserver(function(){if(!$('r116bar')&&$('kbnavbar'))bar();}).observe(v,{childList:true});}}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(init,300);});else setTimeout(init,300);
