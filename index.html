@@ -862,7 +862,21 @@ html.noir:not(#_a):not(#_b) li.galrow .line>.r15th.none+span{grid-area:nm!import
 .r116pn button.rel{flex-basis:100%;border-style:dashed;background:rgba(120,190,150,.08);border-color:rgba(120,190,150,.5);color:#BFE8CF}
 .r116pn small{display:block;font-weight:500;font-size:11px;color:#B9A98C;margin-bottom:2px}
 @media print{#r116bar,#r116sheet,.r116pn{display:none!important}}
-</style><style id="r139css">.triv .trv{margin:0;padding-left:1.4em;display:grid;gap:8px}.triv .trv li{line-height:1.65;font-size:15px;color:#F2E6CC}.triv .tk{display:inline-block;margin-right:6px;padding:0 7px;border-radius:999px;font-size:11.5px;line-height:1.7;background:rgba(201,164,92,.18);color:#E8CD8A;vertical-align:1px}.triv .ts{font-size:12px;color:#B99A66;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}.triv .tnote{margin:8px 0 0;font-size:12px;color:#9C8A6A}html:not(.noir) .triv .trv li{color:inherit}</style></head>
+</style><style id="r139css">.triv .trv{margin:0;padding-left:1.4em;display:grid;gap:8px}.triv .trv li{line-height:1.65;font-size:15px;color:#F2E6CC}.triv .tk{display:inline-block;margin-right:6px;padding:0 7px;border-radius:999px;font-size:11.5px;line-height:1.7;background:rgba(201,164,92,.18);color:#E8CD8A;vertical-align:1px}.triv .ts{font-size:12px;color:#B99A66;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}.triv .tnote{margin:8px 0 0;font-size:12px;color:#9C8A6A}html:not(.noir) .triv .trv li{color:inherit}</style><style id="bcmp-css">
+.bcmp .co{font-size:12.5px;color:var(--dim2,#9E9A92);margin:0 0 8px;line-height:1.6}
+.bcmp .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid rgba(201,164,92,.25);border-radius:12px;max-width:100%}
+.bcmp table{border-collapse:separate;border-spacing:0;min-width:100%;font-size:13px;line-height:1.5}
+.bcmp th,.bcmp td{padding:8px 10px;border-bottom:1px solid rgba(201,164,92,.18);text-align:left;vertical-align:top}
+.bcmp th{background:#1E1912;color:#E8CD8A;font-weight:700;white-space:nowrap}
+.bcmp tr:last-child td{border-bottom:0}
+.bcmp td.nm{position:sticky;left:0;background:#15120E;min-width:150px;max-width:180px;z-index:1}.bcmp th.nm{position:sticky;left:0;z-index:2}
+.bcmp td.nm a{display:flex;gap:8px;align-items:center;color:inherit;text-decoration:none}
+.bcmp td.nm img{width:34px;height:34px;object-fit:contain;flex:0 0 34px}
+.bcmp td.nm span{font-size:12.5px;line-height:1.4}
+.bcmp td.w{min-width:150px;color:#CFC5B2}.bcmp td.k{white-space:nowrap}.bcmp td.pr{white-space:nowrap;color:#E8CD8A}
+.bcmp .hint{font-size:11.5px;color:#8C7F69;margin:6px 0 0}
+@media(max-width:520px){.bcmp td.nm{min-width:118px;max-width:132px;padding:8px 6px 8px 8px}.bcmp td.nm img{width:26px;height:26px;flex-basis:26px}.bcmp td.nm span{font-size:12px}}
+</style></head>
 <body class="r107solid">
 <div id="menu"><button id="mb">&#9776; 目錄</button><b>昇恆昌巧克力速讀檔案</b><button id="fsz" type="button" aria-pressed="false" title="字體放大／還原">A+</button></div>
 <nav id="nav">
@@ -1120,6 +1134,36 @@ function card(p){
  return h+'</div></section>';
 }
 
+/* ===================== 同品牌比較表（r197；資料只取商品卡欄位） ===================== */
+function bcmpTbl(b){
+ var L=P.filter(function(p){return p.brand===b.name;}).sort(function(x,y){return (y.pv||0)-(x.pv||0);});
+ if(L.length<2)return '';
+ function nt(p,k){var n=(p.notes||[]).filter(function(x){return x.k===k;})[0];return n?String(n.v).replace(/<[^>]+>/g,'').split('\n')[0]:'';}
+ function cut(s,n){s=String(s||'').replace(/<[^>]+>/g,'').replace(/【[^】]*】/g,'').trim();return s.length>n?s.slice(0,n).replace(/[，、；]$/,'')+'…':s;}
+ var C=[['類別',function(p){return p.cat||'';}],
+  ['規格',function(p){return cut(nt(p,'規格')||p.spec||'',30);}],
+  ['每入單價',function(p){var u=String(p.x41unit||'');var m=u.match(/每[^（(]*?約?\s*NT\$[\d,.]+/);return m?m[0].replace(/^原價/,''):'';}],
+  ['可可含量',function(p){return cut(p.x41cocoa,26);}],
+  ['產地',function(p){return cut(nt(p,'產地'),16);}],
+  ['口味',function(p){return cut(nt(p,'口味'),40);}],
+  ['特色',function(p){return cut(p.pos,50);}],
+  ['免稅',function(p){return p.dfLimited?(p.dfText||'免稅限定'):'';}]];
+ var cols=[],com=[];
+ C.forEach(function(c){var v=L.map(c[1]),nz=v.filter(Boolean);if(!nz.length)return;
+  var same=v.every(function(x){return x===v[0];});
+  if(same){if(['特色','口味','每入單價'].indexOf(c[0])<0)com.push(c[0]+' '+v[0]);return;}
+  if(nz.length<2&&['特色','口味','可可含量','免稅'].indexOf(c[0])<0)return;
+  cols.push(c);});
+ var W={'口味':1,'特色':1,'可可含量':1,'規格':1};
+ var th='<th class="nm">品項</th>'+cols.map(function(c){return '<th>'+c[0]+'</th>';}).join('')+'<th>價格</th>';
+ var rows=L.map(function(p){var img=p.card2||p.photo||'';
+  return '<tr><td class="nm"><a href="#'+esc(p.id)+'">'+(img?'<img loading="lazy" src="'+esc(img)+'" alt="">':'')+'<span>'+esc(p.no)+'　'+esc(p.nameZh)+'</span></a></td>'
+   +cols.map(function(c){var v=c[1](p);return '<td'+(W[c[0]]?' class="w"':(c[0]==='類別'||c[0]==='每入單價'?' class="k"':''))+'>'+(v?esc(v):'—')+'</td>';}).join('')
+   +'<td class="pr">'+(p.pv?nt2(p.pv):'以現場為準')+'</td></tr>';}).join('');
+ function nt2(n){return 'NT$'+Number(n).toLocaleString();}
+ return '<div class="sec bcmp" style="grid-column:1/-1"><h3>同品牌比較 COMPARE</h3>'+(com.length?'<p class="co">共同：'+esc(com.join('・'))+'</p>':'')
+  +'<div class="tw"><table><thead><tr>'+th+'</tr></thead><tbody>'+rows+'</tbody></table></div><p class="hint">資料取自各商品卡；表格可左右滑動，點品名打開商品卡。價格為原價，折扣以現場 POP、POS 為準。</p></div>';
+}
 /* ===================== 品牌檔案卡 ===================== */
 function bcard(b){
  var h='<section class="card bcard" id="'+b.id+'"><div class="chead"><div class="meta" style="grid-column:1/-1">'
@@ -1148,6 +1192,7 @@ function bcard(b){
  if(KP)h+='<div class="sec" style="grid-column:1/-1"><h3>品牌重點 KEY POINTS</h3>'+KP+'</div>';
  if(b.extra&&b.extra.length)h+='<div class="sec" style="grid-column:1/-1"><details class="bext"><summary>延伸資料（'+b.extra.length+' 條）</summary><ul class="pts">'
    +b.extra.map(function(x){return '<li>'+esc(x)+'</li>';}).join('')+'</ul></details></div>';
+ h+=bcmpTbl(b);
  if(b.warn)h+='<div class="warn">⚠ '+esc(b.warn)+'</div>';
  h+='<div class="bsrc">教材來源：'+esc(b.src)+'</div>';
  return h+'</div></section>';
