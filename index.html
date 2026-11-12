@@ -1255,13 +1255,31 @@ var SEQ=[];
 function seqId(s){return s.h?'brandhead':(s.b?s.b.id:s.p.id);}
 /*r56cb*/function _r56item(s){return s.h?'<section class="bhead" id="brandhead"><h2>品牌檔案<small>'+BRANDS.length+' 個品牌</small></h2><p>品牌故事、年表、官方賣點與櫃檯話術。商品卡裡的「品牌故事」可直接跳到這裡。</p></section>':(s.b?bcard(s.b):card(s.p));}
 var _r56i=0,_r56done=false;
-function _r56chunk(n){var list=document.getElementById('list'),em=document.getElementById('emptymsg'),end=Math.min(SEQ.length,_r56i+n),h='';
- for(var j=_r56i;j<end;j++)h+=_r56item(SEQ[j]);
- var t=document.createElement('div');t.innerHTML=h;var f=document.createDocumentFragment();while(t.firstChild)f.appendChild(t.firstChild);list.insertBefore(f,em);
+function _r56chunk(n){var list=document.getElementById('list'),em=document.getElementById('emptymsg'),end=Math.min(SEQ.length,_r56i+n),h='',ooo=0;
+ for(var j=_r56i;j<end;j++){var _o=document.getElementById(seqId(SEQ[j]));if(_o&&_o.hasAttribute('data-xwooo')){ooo=1;continue;}h+=_r56item(SEQ[j]);}
+ var t=document.createElement('div');t.innerHTML=h;var f=document.createDocumentFragment();while(t.firstChild)f.appendChild(t.firstChild);
+ /*r220ooo*/var _tl=list.querySelector(':scope>[data-xwooo]');list.insertBefore(f,_tl||em);
+ if(ooo){var _ref=em;[].some.call(list.querySelectorAll(':scope>[data-xwooo]'),function(e){if(+e.getAttribute('data-xwooo')>=end){_ref=e;return true;}return false;});
+  for(var jo=_r56i;jo<end;jo++){var eo=document.getElementById(seqId(SEQ[jo]));if(!eo)continue;eo.removeAttribute('data-xwooo');list.insertBefore(eo,_ref);}}
  for(var j2=_r56i;j2<end;j2++){var s2=SEQ[j2],id=seqId(s2),el=document.getElementById(id);CARDEL[id]=el;if(el&&s2.p&&VIS&&Object.keys(VIS).length)el.style.display=VIS[id]?'':'none';}
  _r56i=end;if(window.__enh)window.__enh();
  if(_r56i>=SEQ.length&&!_r56done){_r56done=true;LASTSORT='\u0000';try{apply();}catch(e){}}}
 window.__r56all=function(){if(_r56done)return;while(_r56i<SEQ.length)_r56chunk(40);};
+/*r220lazy*/function xwNeed(){if(window.__xwBuildAll)return true;
+ var b=document.body;if(!b||b.classList.contains('shon')||b.classList.contains('kbon'))return false;
+ var L=document.getElementById('list');if(!L)return true;if(!L.offsetParent||L.classList.contains('xwsolo'))return false;var t=null;[].some.call(L.querySelectorAll(':scope>[data-xwooo]'),function(e){if(e.offsetHeight){t=e;return true;}return false;});
+ return (t?t.getBoundingClientRect().top:L.getBoundingClientRect().bottom)<window.innerHeight*3.5;}
+var _xwW=null,_xwT=null;function xwWake(){if(!_xwW)return;var f=_xwW;_xwW=null;clearTimeout(_xwT);f();}
+function xwWait(f){_xwW=f;clearTimeout(_xwT);_xwT=setTimeout(xwWake,900);}
+window.addEventListener('scroll',function(){if(_xwW&&xwNeed())xwWake();},{passive:true});
+window.__xwBuildMore=function(all){if(all)window.__xwBuildAll=true;xwWake();};
+var _xwIx=null;window.__xwBuildOne=function(id){var el=document.getElementById(id);if(el)return el;
+ if(!_xwIx){_xwIx={};SEQ.forEach(function(s,i){_xwIx[seqId(s)]=i;});}var i=_xwIx[id];if(i==null||i<_r56i)return null;
+ var list=document.getElementById('list'),em=document.getElementById('emptymsg');if(!list)return null;var tmp=document.createElement('div');tmp.innerHTML=_r56item(SEQ[i]);var c=tmp.firstElementChild;if(!c)return null;
+ c.setAttribute('data-xwooo',i);var ref=em;[].some.call(list.querySelectorAll(':scope>[data-xwooo]'),function(e){if(+e.getAttribute('data-xwooo')>i){ref=e;return true;}return false;});
+ list.insertBefore(c,ref);CARDEL[id]=c;if(SEQ[i].p&&VIS&&Object.keys(VIS).length)c.style.display=VIS[id]?'':'none';if(window.__enh)window.__enh();return c;};
+document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;var a=t.closest('[data-go],[data-id],a[href^="#"]');if(!a)return;
+ var id=a.getAttribute('data-go')||a.getAttribute('data-id')||(a.getAttribute('href')||'').slice(1);if(!id||document.getElementById(id))return;try{window.__xwBuildOne(id);}catch(x){}},true);
 function build(){
  var list=document.getElementById('list');
  list.innerHTML='<div id="emptymsg" style="padding:80px 0;text-align:center;color:var(--dim2);display:none">找不到符合的品項，試試品牌英文名、品號或條碼</div>';
@@ -1269,6 +1287,7 @@ function build(){
  _r56chunk(12);
  var ric=window.requestIdleCallback||function(f){return setTimeout(function(){f({timeRemaining:function(){return 8;}});},1);};
  function step(dl){if(_r56done)return;if(window.__r56busy&&Date.now()-window.__r56busy<700){setTimeout(function(){ric(step);},400);return;}
+  /*r220lazy*/if(!xwNeed()){xwWait(function(){ric(step);});return;}
   do{_r56chunk(5);}while(!_r56done&&dl&&dl.timeRemaining&&dl.timeRemaining()>12);if(!_r56done)ric(step);}
  setTimeout(function(){ric(step);},1200);
 }
@@ -1305,6 +1324,7 @@ function reorder(rows,fs){
 }
 function apply(){
  var rows=rowsNow();
+ if(!_r56done&&!window.__xwBuildAll&&(rows.length<P.length||gv('fsort'))){window.__xwBuildAll=true;if(typeof xwWake==='function')xwWake();}
  reorder(rows,gv('fsort'));
  applyVis(rows);
  nav(rows);
@@ -2012,6 +2032,7 @@ buildExcl(); build(); apply();
  function jump(id,n){
   if(!id) return;
   var el=document.getElementById(id);
+  if(!el&&window.__xwBuildOne){try{el=window.__xwBuildOne(id);}catch(e){}}
   if(el && el.classList && el.classList.contains('card')) return solo(el);
   n=n||0;
   if(n===4) forceBuild(id);
@@ -3746,7 +3767,7 @@ var PRI=choc?['規格','品牌','類別','產地']:['容量','酒精度','產區
 function card(c){var sp=c.querySelector('.meta > .specs');if(!sp||sp.getAttribute('data-r21'))return;sp.setAttribute('data-r21','1');
  var cells=[].slice.call(sp.children);if(!cells.length)return;
  function rank(x){var k=(x.querySelector('.k')||{}).textContent||'';k=k.trim().split(/[\s・]/)[0];var i=PRI.indexOf(k);
-  if(x.classList.contains('unk')||x.classList.contains('r16wide'))return 90+(i<0?0:i);return i<0?50:i;}
+  if(x.classList.contains('unk')||(x.classList.contains('r16wide')&&i<0))return 90+(i<0?0:i);return i<0?50:i;}
  cells.map(function(x,i){return [rank(x),i,x];}).sort(function(a,b){return a[0]-b[0]||a[1]-b[1];}).forEach(function(r){sp.appendChild(r[2]);});
  var old=sp.parentNode.querySelector('.r21more');if(old)old.parentNode.removeChild(old);
  if(cells.length>4){sp.classList.add('r21cut');var b=document.createElement('button');b.type='button';b.className='r21more';
