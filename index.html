@@ -2035,7 +2035,7 @@ buildExcl(); build(); apply();
   if(!el&&window.__xwBuildOne){try{el=window.__xwBuildOne(id);}catch(e){}}
   if(el && el.classList && el.classList.contains('card')) return solo(el);
   n=n||0;
-  if(n===4) forceBuild(id);
+  var _isP=window.__xwIsCard?window.__xwIsCard(id):true;if(!_isP&&n>=4)return;if(n===4) forceBuild(id);
   if(n<800) setTimeout(function(){jump(id,n+1);},200);
  }
  function fromHash(){
@@ -4939,5 +4939,6 @@ function kick(){var s=document.getElementById('shstat');if(document.body&&docume
 [0,400,1200,2500].forEach(function(t){setTimeout(kick,t);});
 })();
 </script>
+<script id="xwiscard-js">window.__xwIsCard=function(id){if(!window.__xwCardSet){try{var s={};(SEQ.map(seqId)).forEach(function(k){s[k]=1;});window.__xwCardSet=s;}catch(e){return true;}}return !!window.__xwCardSet[id];};</script>
 </body>
 </html>
