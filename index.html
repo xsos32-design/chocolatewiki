@@ -3934,6 +3934,8 @@ function rank(e){
  var c=e.className||'',t=head(e);
  if(/\bwarn\b/.test(c))return 90;
  if(/\bbsrc\b/.test(c))return 95;
+ if(/\bbzsec\b/.test(c))return 1;
+ if(/\bmmsec\b/.test(c))return 2;
  if(/\btalkbox\b/.test(c))return 10;
  if(/^一句話定位/.test(t))return 0;
  if(/^銷售重點/.test(t))return 20;
