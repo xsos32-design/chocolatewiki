@@ -3942,6 +3942,7 @@ function rank(e){
  if(/^(品飲筆記|規格與備註)/.test(t))return 30;
  if(/^單品(製作)?由來/.test(t))return 40;
  if(/^品牌故事/.test(t)||/\br20brand\b/.test(c))return 50;
+ if(/\bbacesec\b/.test(c))return 55;
  if(/\bbrandfab\b/.test(c))return 60;
  if(/^延伸資料/.test(t))return 70;
  return 80;
