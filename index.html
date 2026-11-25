@@ -876,19 +876,7 @@ html.noir:not(#_a):not(#_b) li.galrow .line>.r15th.none+span{grid-area:nm!import
 .bcmp td.w{min-width:150px;color:#CFC5B2}.bcmp td.k{white-space:nowrap}.bcmp td.pr{white-space:nowrap;color:#E8CD8A}
 .bcmp .hint{font-size:11.5px;color:#8C7F69;margin:6px 0 0}
 @media(max-width:520px){.bcmp td.nm{min-width:118px;max-width:132px;padding:8px 6px 8px 8px}.bcmp td.nm img{width:26px;height:26px;flex-basis:26px}.bcmp td.nm span{font-size:12px}}
-</style><style id="xwhold-css">#list.xwhold>*:not(.xwholdt){display:none!important}#xwholdbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:89;display:none;padding:7px 14px;border-radius:999px;background:rgba(23,20,17,.94);border:1px solid rgba(201,164,92,.5);color:#E8DCC2;font:13px/1.3 "Noto Sans TC",-apple-system,"PingFang TC",sans-serif;box-shadow:0 10px 30px -14px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap}#xwholdbar.show{display:block}</style><style id="bcmpm-css">@media(max-width:760px){.bcmp .tw{overflow:visible!important;border:0!important;border-radius:0}
-.bcmp table,.bcmp tbody{display:block;min-width:0!important;width:100%}
-.bcmp thead{display:none}
-.bcmp tr{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;border:1px solid rgba(201,164,92,.25);border-radius:12px;background:#15120E;padding:10px 12px 12px;margin:0 0 10px}
-.bcmp td{display:block;border:0!important;padding:0!important;min-width:0!important;max-width:none!important;white-space:normal!important}
-.bcmp td.nm{position:static!important;flex:0 0 100%;background:none!important;padding:0 0 8px!important;margin:0 0 2px;border-bottom:1px solid rgba(201,164,92,.18)!important}
-.bcmp td.nm img{width:42px!important;height:42px!important;flex-basis:42px!important}
-.bcmp td.nm span{font-size:15px!important;font-weight:700}
-.bcmp td[data-l]::before{content:attr(data-l);display:block;font-size:11.5px;font-weight:400;color:#8C7F69;letter-spacing:.06em;margin-bottom:1px}
-.bcmp td.k,.bcmp td.pr{flex:0 1 auto;font-size:15px}
-.bcmp td.k{order:1}.bcmp td.pr{order:2}.bcmp td.w,.bcmp td.o{order:4}.bcmp td.s{flex:0 1 auto!important;order:3}
-.bcmp td.w,.bcmp td.o{flex:0 0 100%;font-size:14px;line-height:1.55}
-.bcmp td.e{display:none!important}}</style></head>
+</style><style id="xwhold-css">#list.xwhold>*:not(.xwholdt){display:none!important}#xwholdbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:89;display:none;padding:7px 14px;border-radius:999px;background:rgba(23,20,17,.94);border:1px solid rgba(201,164,92,.5);color:#E8DCC2;font:13px/1.3 "Noto Sans TC",-apple-system,"PingFang TC",sans-serif;box-shadow:0 10px 30px -14px rgba(0,0,0,.8);pointer-events:none;white-space:nowrap}#xwholdbar.show{display:block}</style></head>
 <body class="r107solid">
 <div id="menu"><button id="mb">&#9776; 目錄</button><b>昇恆昌巧克力速讀檔案</b><button id="fsz" type="button" aria-pressed="false" title="字體放大／還原">A+</button></div>
 <nav id="nav">
@@ -1170,11 +1158,11 @@ function bcmpTbl(b){
  var th='<th class="nm">品項</th>'+cols.map(function(c){return '<th>'+c[0]+'</th>';}).join('')+'<th>價格</th>';
  var rows=L.map(function(p){var img=p.card2||p.photo||'';
   return '<tr><td class="nm"><a href="#'+esc(p.id)+'">'+(img?'<img loading="lazy" src="'+esc(img)+'" alt="">':'')+'<span>'+esc(p.no)+'　'+esc(p.nameZh)+'</span></a></td>'
-   +cols.map(function(c){var v=c[1](p);return '<td class="'+(W[c[0]]?'w':(c[0]==='類別'||c[0]==='每入單價'?'k':'o'))+(v?(String(v).length<=14?' s':''):' e')+'" data-l="'+c[0]+'">'+(v?esc(v):'—')+'</td>';}).join('')
-   +'<td class="pr" data-l="價格">'+(p.pv?nt2(p.pv):'以現場為準')+'</td></tr>';}).join('');
+   +cols.map(function(c){var v=c[1](p);return '<td'+(W[c[0]]?' class="w"':(c[0]==='類別'||c[0]==='每入單價'?' class="k"':''))+'>'+(v?esc(v):'—')+'</td>';}).join('')
+   +'<td class="pr">'+(p.pv?nt2(p.pv):'以現場為準')+'</td></tr>';}).join('');
  function nt2(n){return 'NT$'+Number(n).toLocaleString();}
  return '<div class="sec bcmp" style="grid-column:1/-1"><h3>同品牌比較 COMPARE</h3>'+(com.length?'<p class="co">共同：'+esc(com.join('・'))+'</p>':'')
-  +'<div class="tw"><table><thead><tr>'+th+'</tr></thead><tbody>'+rows+'</tbody></table></div><p class="hint">資料取自各商品卡，點品名打開商品卡。價格為原價，折扣以現場 POP、POS 為準。</p></div>';
+  +'<div class="tw"><table><thead><tr>'+th+'</tr></thead><tbody>'+rows+'</tbody></table></div><p class="hint">資料取自各商品卡；表格可左右滑動，點品名打開商品卡。價格為原價，折扣以現場 POP、POS 為準。</p></div>';
 }
 /* ===================== 品牌檔案卡 ===================== */
 function bcard(b){
